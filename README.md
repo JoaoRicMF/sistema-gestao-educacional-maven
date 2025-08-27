@@ -28,10 +28,10 @@
 <pre>
 src/main
 ├── <strong>java/</strong>
-│   ├── <strong>dao/</strong>
-│   ├── <strong>database/</strong>
-│   ├── <strong>excecoes/</strong>
-│   ├── <strong>gui/</strong>
+│   ├── <strong>dao/</strong>            ← Classes que fazem a comunicação com o banco de dados
+│   ├── <strong>database/</strong>       ← Classe de conexão com o MySQL
+│   ├── <strong>excecoes/</strong>       ← Exceções personalizadas do sistema
+│   ├── <strong>gui/</strong>            ← Controladores da interface gráfica (arquivos .java)
 │   │   ├── <strong>aluno/</strong>
 │   │   ├── <strong>disciplina/</strong>
 │   │   ├── <strong>frequencia/</strong>
@@ -43,23 +43,23 @@ src/main
 │   │   ├── <strong>turma/</strong>
 │   │   ├── <strong>util/</strong>
 │   │   └── <strong>visaoaluno/</strong>
-│   ├── <strong>main/</strong>
-│   ├── <strong>modelo/</strong>
-│   └── <strong>service/</strong>
-├── <strong>META-INF/</strong>
+│   ├── <strong>main/</strong>           ← Classe principal (Main.java)
+│   ├── <strong>modelo/</strong>         ← Classes de modelo (Aluno, Professor, etc.)
+│   └── <strong>service/</strong>        ← Lógica de negócio e validações
+├── <strong>META-INF/</strong>         ← Metadados do projeto
 └── <strong>resources/</strong>
-    ├──<strong>Imagens/</strong>
-    ├──<strong>gui/</strong>
-       ├── <strong>aluno/</strong>
-       ├── <strong>css/</strong>
-       ├── <strong>disciplina/</strong>
-       ├── <strong>frequencia/</strong>
-       ├── <strong>matricula/</strong>
-       ├── <strong>mural/</strong>
-       ├── <strong>notas/</strong>
-       ├── <strong>professor/</strong>
-       ├── <strong>telainicial/</strong>
-       ├── <strong>turma/</strong>
-       ├── <strong>util/</strong>
-       └── <strong>visaoaluno/</strong>
+    ├── <strong>Imagens/</strong>        ← Imagens e ícones da aplicação
+    └── <strong>gui/</strong>            ← Arquivos da interface gráfica (arquivos .fxml e .css)
+        ├── <strong>aluno/</strong>
+        ├── <strong>css/</strong>
+        ├── <strong>disciplina/</strong>
+        ├── <strong>frequencia/</strong>
+        ├── <strong>matricula/</strong>
+        ├── <strong>mural/</strong>
+        ├── <strong>notas/</strong>
+        ├── <strong>professor/</strong>
+        ├── <strong>telainicial/</strong>
+        ├── <strong>turma/</strong>
+        ├── <strong>util/</strong>
+        └── <strong>visaoaluno/</strong>
 </pre>
