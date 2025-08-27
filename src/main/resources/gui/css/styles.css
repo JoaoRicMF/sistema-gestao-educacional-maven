@@ -1,0 +1,256 @@
+/*TEMA CLARO  Estilo Principal para o Tema Claro*/
+/*ESTILOS GERAIS E GLOBAIS*/
+
+/* Estilo principal aplicado a toda a janela (cena). */
+/* Define o gradiente de fundo e a fonte padrão para toda a aplicação. */
+.root {
+    -fx-background-color: #f8f9fa;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+
+/* Define a fonte especial para ícones. */
+.icon, .icon-text {
+    -fx-font-family: "Segoe UI Symbol";
+}
+
+/* Estilo base para ícones pequenos (geralmente dentro de botões). */
+.icon {
+    -fx-font-size: 1.2em;
+    -fx-fill: white;
+}
+
+/* Estilo para ícones maiores que acompanham texto (ex: nos botões da tela inicial). */
+.icon-text {
+    -fx-font-size: 1.5em;
+    -fx-fill: #1e1e1e; /* COR PADRÃO ADICIONADA PARA O TEMA CLARO */
+}
+
+
+/*TELA INICIAL (TELA DE ACESSO)*/
+
+/* Container principal da tela inicial. */
+.tela-inicial-container {
+    -fx-background-color: linear-gradient(to bottom, #ECEFF1, #bbdfff);
+    -fx-alignment: top-center; /* Alinha o conteúdo no topo e centro. */
+}
+
+/* Título principal: "Sistema de Gestão Educacional". */
+.titulo-inicial {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #37474F;
+}
+
+/* Subtítulo: "Bem-vindo!...". */
+.subtitulo-inicial {
+    -fx-font-size: 14px;
+    -fx-text-fill: #37474F;
+    -fx-padding-bottom: 20px;
+}
+
+/* Card branco que agrupa os botões de acesso. */
+.card-acesso {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 30px;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 15, 0, 0, 4); /* Sombra suave. */
+    -fx-max-width: 300px;
+    -fx-alignment: center;
+}
+
+/* Estilo geral para os botões da tela inicial (Administrativo, Professor, Aluno). */
+.tela-inicial-container .button {
+    -fx-font-size: 16px;
+    -fx-pref-width: 220px;
+    -fx-pref-height: 50px;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-graphic-text-gap: 10px; /* Espaço entre o ícone e o texto. */
+    -fx-transition: all 0.2s ease-in-out; /* Define a suavidade das animações. */
+}
+
+/* Animação para os botões da tela inicial ao passar o mouse. */
+/* Aumenta o tamanho e adiciona uma sombra para dar feedback de interatividade. */
+.tela-inicial-container .button:hover {
+    -fx-scale-x: 1.05; /* Aumenta a escala em 5% no eixo X. */
+    -fx-scale-y: 1.05; /* Aumenta a escala em 5% no eixo Y. */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 3);
+}
+
+/* Animação para os botões da tela inicial ao clicar. */
+/* Diminui o tamanho para simular um "pressionar". */
+.tela-inicial-container .button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/* --- Cores específicas para cada botão de acesso --- */
+
+/* Botão Administrativo */
+#btnAdministrativo { -fx-background-color: #0d6efd; -fx-text-fill: black; }
+#btnAdministrativo:hover { -fx-background-color: #0b5ed7; }
+#btnAdministrativo .icon-text { -fx-fill: black; }
+
+/* Botão Professor */
+#btnProfessor { -fx-background-color: #198754; -fx-text-fill: black; }
+#btnProfessor:hover { -fx-background-color: #157347; }
+#btnProfessor .icon-text { -fx-fill: black; }
+
+/* Botão Aluno */
+#btnAluno { -fx-background-color: #ffc107; -fx-text-fill: black; }
+#btnAluno:hover { -fx-background-color: #e0a800; }
+#btnAluno .icon-text { -fx-fill: black; }
+
+
+/*COMPONENTES DOS PAINÉIS INTERNOS (FORMULÁRIOS)*/
+
+/* Estilo para os painéis com título (ex: "Dados Pessoais"). */
+.titled-pane {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);
+}
+
+/* Área do título dentro do TitledPane. */
+.titled-pane > .title {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1 0; /* Linha sutil na parte inferior do título. */
+    -fx-border-color: #E0E0E0;
+    -fx-padding: 10 15;
+}
+
+/* Texto do título do TitledPane. */
+.titled-pane .title .text {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-fill: #263238;
+}
+
+/* Área de conteúdo do TitledPane. */
+.titled-pane .content {
+    -fx-padding: 25px;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+
+/* --- Controles de Formulário --- */
+/* Estilo padrão para botões dentro dos formulários (Salvar, etc.). */
+.button {
+    -fx-background-color: #2196F3; /* Azul padrão. */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 10px 20px;
+    -fx-font-size: 13px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 2);
+    -fx-alignment: CENTER;
+    -fx-graphic-text-gap: 8px;
+}
+.button:hover {
+    -fx-background-color: #1976D2; /* Azul mais escuro ao passar o mouse. */
+}
+
+/* Botões de ação negativa (excluir, cancelar) - cor vermelha. */
+#btnCancelar, #btnExcluirProfessor, #btnDesativar, #btnTrancar, #btnExcluir, #btnRemoverAluno {
+    -fx-background-color: #F44336;
+}
+#btnCancelar:hover, #btnExcluirProfessor:hover, #btnDesativar:hover, #btnTrancar:hover, #btnExcluir:hover, #btnRemoverAluno:hover {
+    -fx-background-color: #D32F2F;
+}
+
+/* Estilo para campos de texto e caixas de seleção. */
+.text-field, .combo-box {
+     -fx-border-color: #CFD8DC;
+     -fx-background-radius: 8;
+     -fx-border-radius: 8;
+     -fx-font-size: 14px;
+     -fx-min-height: 38px;
+     -fx-pref-height: 38px;
+ }
+
+/* Efeito de foco para campos de texto e caixas de seleção. */
+.text-field:focused, .combo-box:focused {
+    -fx-border-color: #2196F3; /* Borda azul ao focar. */
+    -fx-effect: dropshadow(gaussian, rgba(33, 150, 243, 0.3), 5, 0, 0, 1);
+}
+
+/* Estilo especial para campos de texto com erro de validação (borda vermelha). */
+.text-field-error {
+    -fx-border-color: #EF5350;
+    -fx-border-width: 1.5px;
+}
+
+.menu-button {
+    -fx-background-color: #2196F3; /* Cor azul padrão do botão Salvar */
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8px 20px;
+    -fx-font-size: 13px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 2);
+    -fx-alignment: CENTER;
+     -fx-pref-width: 130px;
+     -fx-pref-height: 40px;
+     -fx-min-height: 38px
+}
+.menu-button:hover {
+    -fx-background-color: #1976D2;
+}
+
+.menu-button .label {
+    -fx-text-fill: white;
+}
+.menu-item .label {
+    -fx-text-fill: black;
+}
+
+.menu-item:focused .label {
+    -fx-text-fill: white;
+}
+
+/*COMPONENTES DO CABEÇALHO E RODAPÉ*/
+/* Botão de voltar ao menu inicial. */
+.botao-voltar {
+    -fx-background-color: #2196F3;
+    -fx-font-size: 12px;
+    -fx-pref-width: 150px;
+}
+.botao-voltar:hover {
+    -fx-background-color: #1976D2;
+}
+
+/* Botão de alternar tema (claro/escuro). */
+.toggle-button {
+    -fx-font-size: 1.5em;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-text-fill: #37474F;
+    -fx-border-color: #CFD8DC;
+    -fx-background-color: transparent;
+}
+.toggle-button:hover { -fx-background-color: #E0E0E0; }
+.toggle-button:selected { -fx-background-color: #CFD8DC; }
+
+/* Etiqueta que exibe o relógio no cabeçalho. */
+.relogio-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #546E7A;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 12px;
+    -fx-background-color: #ECEFF1;
+    -fx-border-color: #CFD8DC;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+/* Etiqueta de texto do rodapé. */
+.footer-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6c757d; /* Cor de texto cinza discreta. */
+}

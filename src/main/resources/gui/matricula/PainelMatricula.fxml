@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane styleClass="root"  xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.matricula.PainelMatriculaController">
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+            <content>
+                <VBox spacing="10.0" styleClass="vbox-container">
+                    <children>
+                        <TitledPane animated="false" text="Dados da Matrícula">
+                            <content>
+                                <GridPane hgap="15.0" vgap="15.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="NEVER" />
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                        <ColumnConstraints hgrow="NEVER" />
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                    </columnConstraints>
+                                    <children>
+                                        <Label text="Aluno" GridPane.halignment="RIGHT" />
+                                        <ComboBox fx:id="cbAlunos" prefWidth="200.0" GridPane.columnIndex="1" />
+                                        <Label text="Data da Matrícula" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
+                                        <TextField fx:id="txtDataMatricula" promptText="dd/MM/yyyy" GridPane.columnIndex="3" />
+                                        <Label text="Turma" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                        <ComboBox fx:id="cbTurmas" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    </children>
+                                </GridPane>
+                            </content>
+                        </TitledPane>
+                    </children>
+                    <padding>
+                        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
+                    </padding>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER" spacing="20.0" styleClass="vbox-container">
+            <children>
+                <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#limparCampos" prefWidth="140.0" text="Cancelar">
+                    <graphic><Text styleClass="icon" text="❌" /></graphic>
+                </Button>
+                <Button fx:id="btnSalvar" mnemonicParsing="false" onAction="#realizarMatricula" prefWidth="140.0" text="Salvar">
+                    <graphic><Text styleClass="icon" text="💾" /></graphic>
+                </Button>
+            </children>
+            <padding>
+                <Insets bottom="20.0" />
+            </padding>
+        </HBox>
+    </bottom>
+</BorderPane>

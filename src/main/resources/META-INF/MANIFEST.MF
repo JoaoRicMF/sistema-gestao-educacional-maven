@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Main-Class: main.Main
+Class-Path: javafx-fxml-17.0.10-win.jar javafx-base-17.0.10-win.jar java
+ fx-graphics-17.0.10-win.jar javafx-controls-17.0.10.jar javafx-base-17.
+ 0.10.jar javafx-controls-17.0.10-win.jar javafx-fxml-17.0.10.jar javafx
+ -graphics-17.0.10.jar
+
