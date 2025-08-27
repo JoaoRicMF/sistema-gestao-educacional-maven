@@ -25,6 +25,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; // Importe ImageView
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -73,6 +75,9 @@ public class PrincipalFX extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Sistema de Gestão Educacional");
+
+        // Define o ícone da janela
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagens/icone_principal_24dp_google_material_Symbols.png")));
 
         lightTheme = getClass().getResource("/gui/css/styles.css").toExternalForm();
         darkTheme = getClass().getResource("/gui/css/dark-theme.css").toExternalForm();
@@ -174,12 +179,22 @@ public class PrincipalFX extends Application {
         relogioTimeline.setCycleCount(Animation.INDEFINITE);
         relogioTimeline.play();
 
-        ToggleButton themeToggle = new ToggleButton(isDarkMode ? "☀️" : "🌙");
+        // Crie os ImageViews para os ícones de tema
+        ImageView lightModeIcon = new ImageView(new Image(getClass().getResourceAsStream("/Imagens/white_mode_24dp_google_material_Symbols.png")));
+        ImageView darkModeIcon = new ImageView(new Image(getClass().getResourceAsStream("/Imagens/dark_mode_24dp_google_material_Symbols.png")));
+        lightModeIcon.setFitWidth(24);
+        lightModeIcon.setFitHeight(24);
+        darkModeIcon.setFitWidth(24);
+        darkModeIcon.setFitHeight(24);
+
+
+        ToggleButton themeToggle = new ToggleButton();
         themeToggle.getStyleClass().add("toggle-button");
+        themeToggle.setGraphic(isDarkMode ? darkModeIcon : lightModeIcon); // Define o gráfico inicial
         themeToggle.setSelected(isDarkMode);
         themeToggle.setOnAction(event -> {
             toggleTheme();
-            themeToggle.setText(isDarkMode ? "☀️" : "🌙");
+            themeToggle.setGraphic(isDarkMode ? darkModeIcon : lightModeIcon); // Atualiza o gráfico
         });
 
         Region spacer = new Region();

@@ -25,7 +25,7 @@
             <children>
                 <ImageView fx:id="schoolIcon" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../Imagens/school_24dp_google_material_Symbols.png" />
+                        <Image url="/Imagens/icone_principal_24dp_google_material_Symbols.png" />
                     </image>
                     <VBox.margin>
                         <Insets top="30.0" />
@@ -37,13 +37,13 @@
                 <VBox styleClass="card-acesso" alignment="CENTER" spacing="15.0">
                     <children>
                         <Button fx:id="btnAdministrativo" onAction="#abrirPainelAdministrativo" text="Administrativo">
-                            <graphic><Text styleClass="icon-text" text="🛠️" /></graphic>
+                            <graphic><ImageView fitHeight="24.0" fitWidth="24.0"><Image url="/Imagens/icone_administrativo_30dp_google_material_Symbols.png" /></ImageView></graphic>
                         </Button>
                         <Button fx:id="btnProfessor" onAction="#abrirPainelProfessor" text="Professor">
-                            <graphic><Text styleClass="icon-text" text="🏫" /></graphic>
+                            <graphic><ImageView fitHeight="24.0" fitWidth="24.0"><Image url="/Imagens/icone_professor_30dp_google_material_Symbols.png" /></ImageView></graphic>
                         </Button>
                         <Button fx:id="btnAluno" onAction="#abrirPainelAluno" text="Aluno">
-                            <graphic><Text styleClass="icon-text" text="🎓" /></graphic>
+                            <graphic><ImageView fitHeight="24.0" fitWidth="24.0"><Image url="/Imagens/icone_aluno_30dp_google_material_Symbols.png" /></ImageView></graphic>
                         </Button>
                     </children>
                 </VBox>

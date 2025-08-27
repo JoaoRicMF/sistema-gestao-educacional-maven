@@ -145,14 +145,14 @@
 }
 
 .text-field, .combo-box {
-     -fx-background-color: #333;
-     -fx-text-fill: #e0e0e0;
-     -fx-border-color: #555;
-     -fx-background-radius: 8;
-     -fx-border-radius: 8;
-     -fx-font-size: 14px;
-     -fx-min-height: 38px;
-     -fx-pref-height: 38px;
+    -fx-background-color: #333;
+    -fx-text-fill: #e0e0e0;
+    -fx-border-color: #555;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-size: 14px;
+    -fx-min-height: 38px;
+    -fx-pref-height: 38px;
 }
 
 .text-field:focused, .combo-box:focused, .list-view:focused {
@@ -169,11 +169,9 @@
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 6;
-    -fx-padding: 8px 20px;
+    -fx-padding: 10px 20px; /* Ajustado para corresponder ao .button */
     -fx-font-size: 13px;
     -fx-pref-width: 130px;
-    -fx-pref-height: 40px;
-    -fx-min-height: 38px
 }
 .menu-button:hover {
     -fx-background-color: #0b5ed7;

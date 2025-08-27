@@ -2,10 +2,12 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane styleClass="root"  xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.mural.PainelMuralController">
+<BorderPane styleClass="root" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.mural.PainelMuralController">
     <center>
         <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
             <content>
@@ -34,7 +36,7 @@
                         </TitledPane>
                     </children>
                     <padding>
-                        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
                 </VBox>
             </content>
@@ -43,11 +45,19 @@
     <bottom>
         <HBox alignment="CENTER" spacing="20.0" styleClass="vbox-container">
             <children>
-                <Button fx:id="btnCancelar" onAction="#limparCampos" text="Cancelar" prefWidth="140.0">
-                    <graphic><Text styleClass="icon" text="❌" /></graphic>
+                <Button fx:id="btnCancelar" onAction="#limparCampos" prefWidth="130.0" text="Cancelar">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0">
+                            <Image url="/Imagens/close_24dp_google_material_Symbols.png" />
+                        </ImageView>
+                    </graphic>
                 </Button>
-                <Button onAction="#enviarAviso" text="Enviar Aviso" prefWidth="140.0">
-                    <graphic><Text styleClass="icon" text="✉️" /></graphic>
+                <Button onAction="#enviarAviso" prefWidth="130.0" text="Enviar Aviso">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0">
+                            <Image url="/Imagens/save_24dp_google_material_Symbols.png" />
+                        </ImageView>
+                    </graphic>
                 </Button>
             </children>
             <padding>

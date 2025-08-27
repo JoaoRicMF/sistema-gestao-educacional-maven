@@ -20,18 +20,28 @@ public class TelaInicialController {
     @FXML
     private ImageView schoolIcon;
 
+    // Adicione os ImageViews para os ícones de tema aqui também
+    private final ImageView lightModeIcon = new ImageView(new Image(getClass().getResourceAsStream("/Imagens/white_mode_24dp_google_material_Symbols.png")));
+    private final ImageView darkModeIcon = new ImageView(new Image(getClass().getResourceAsStream("/Imagens/dark_mode_24dp_google_material_Symbols.png")));
+
     public void setMainApp(PrincipalFX mainApp) {
         this.mainApp = mainApp;
+
+        // Configura o tamanho dos ícones
+        lightModeIcon.setFitWidth(24);
+        lightModeIcon.setFitHeight(24);
+        darkModeIcon.setFitWidth(24);
+        darkModeIcon.setFitHeight(24);
 
         // Sincroniza o estado do botão e do ícone quando a tela é carregada
         if (mainApp.isDarkMode()) {
             themeToggle.setSelected(true);
-            themeToggle.setText("☀️");
-            schoolIcon.setImage(new Image(getClass().getResourceAsStream("/Imagens/school_24dp_google_material_Symbols_Dark.png")));
+            themeToggle.setGraphic(darkModeIcon); // Define o gráfico para dark mode
+            schoolIcon.setImage(new Image(getClass().getResourceAsStream("/Imagens/icone_principal_24dp_google_material_Symbols_Dark.png")));
         } else {
             themeToggle.setSelected(false);
-            themeToggle.setText("🌙");
-            schoolIcon.setImage(new Image(getClass().getResourceAsStream("/Imagens/school_24dp_google_material_Symbols.png")));
+            themeToggle.setGraphic(lightModeIcon); // Define o gráfico para light mode
+            schoolIcon.setImage(new Image(getClass().getResourceAsStream("/Imagens/icone_principal_24dp_google_material_Symbols.png")));
         }
     }
 
@@ -57,12 +67,12 @@ public class TelaInicialController {
         // Atualiza o botão e o ícone após a troca de tema
         if (mainApp.isDarkMode()) {
             themeToggle.setSelected(true);
-            themeToggle.setText("☀️");
-            schoolIcon.setImage(new Image(getClass().getResourceAsStream("/Imagens/school_24dp_google_material_Symbols_Dark.png")));
+            themeToggle.setGraphic(darkModeIcon); // Atualiza o gráfico para dark mode
+            schoolIcon.setImage(new Image(getClass().getResourceAsStream("/Imagens/icone_principal_24dp_google_material_Symbols_Dark.png")));
         } else {
             themeToggle.setSelected(false);
-            themeToggle.setText("🌙");
-            schoolIcon.setImage(new Image(getClass().getResourceAsStream("/Imagens/school_24dp_google_material_Symbols.png")));
+            themeToggle.setGraphic(lightModeIcon); // Atualiza o gráfico para light mode
+            schoolIcon.setImage(new Image(getClass().getResourceAsStream("/Imagens/icone_principal_24dp_google_material_Symbols.png")));
         }
     }
     @FXML

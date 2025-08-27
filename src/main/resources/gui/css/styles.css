@@ -65,7 +65,7 @@
     -fx-font-size: 16px;
     -fx-pref-width: 220px;
     -fx-pref-height: 50px;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 8;
     -fx-graphic-text-gap: 10px; /* Espaço entre o ícone e o texto. */
@@ -90,19 +90,19 @@
 /* --- Cores específicas para cada botão de acesso --- */
 
 /* Botão Administrativo */
-#btnAdministrativo { -fx-background-color: #0d6efd; -fx-text-fill: black; }
+#btnAdministrativo { -fx-background-color: #0d6efd; -fx-text-fill: white; }
 #btnAdministrativo:hover { -fx-background-color: #0b5ed7; }
-#btnAdministrativo .icon-text { -fx-fill: black; }
+#btnAdministrativo .icon-text { -fx-fill: white; }
 
 /* Botão Professor */
-#btnProfessor { -fx-background-color: #198754; -fx-text-fill: black; }
+#btnProfessor { -fx-background-color: #198754; -fx-text-fill: white; }
 #btnProfessor:hover { -fx-background-color: #157347; }
-#btnProfessor .icon-text { -fx-fill: black; }
+#btnProfessor .icon-text { -fx-fill: white; }
 
 /* Botão Aluno */
-#btnAluno { -fx-background-color: #ffc107; -fx-text-fill: black; }
+#btnAluno { -fx-background-color: #ffc107; -fx-text-fill: white; }
 #btnAluno:hover { -fx-background-color: #e0a800; }
-#btnAluno .icon-text { -fx-fill: black; }
+#btnAluno .icon-text { -fx-fill: white; }
 
 
 /*COMPONENTES DOS PAINÉIS INTERNOS (FORMULÁRIOS)*/
@@ -166,13 +166,13 @@
 
 /* Estilo para campos de texto e caixas de seleção. */
 .text-field, .combo-box {
-     -fx-border-color: #CFD8DC;
-     -fx-background-radius: 8;
-     -fx-border-radius: 8;
-     -fx-font-size: 14px;
-     -fx-min-height: 38px;
-     -fx-pref-height: 38px;
- }
+    -fx-border-color: #CFD8DC;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-size: 14px;
+    -fx-min-height: 38px;
+    -fx-pref-height: 38px;
+}
 
 /* Efeito de foco para campos de texto e caixas de seleção. */
 .text-field:focused, .combo-box:focused {
@@ -190,13 +190,11 @@
     -fx-background-color: #2196F3; /* Cor azul padrão do botão Salvar */
     -fx-font-weight: bold;
     -fx-background-radius: 6;
-    -fx-padding: 8px 20px;
+    -fx-padding: 10px 20px; /* Ajustado para corresponder ao .button */
     -fx-font-size: 13px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 2);
     -fx-alignment: CENTER;
-     -fx-pref-width: 130px;
-     -fx-pref-height: 40px;
-     -fx-min-height: 38px
+    -fx-pref-width: 130px;
 }
 .menu-button:hover {
     -fx-background-color: #1976D2;

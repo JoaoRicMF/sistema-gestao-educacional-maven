@@ -2,10 +2,12 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane styleClass="root"  xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.professor.PainelProfessorController">
+<BorderPane styleClass="root" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.professor.PainelProfessorController">
     <center>
         <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
             <content>
@@ -40,7 +42,11 @@
                                         <Label text="Gênero" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
                                         <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="3">
                                             <children>
-                                                <RadioButton fx:id="rbMasculino" text="Masculino"><toggleGroup><ToggleGroup fx:id="bgGenero" /></toggleGroup></RadioButton>
+                                                <RadioButton fx:id="rbMasculino" text="Masculino">
+                                                    <toggleGroup>
+                                                        <ToggleGroup fx:id="bgGenero" />
+                                                    </toggleGroup>
+                                                </RadioButton>
                                                 <RadioButton fx:id="rbFeminino" text="Feminino" toggleGroup="$bgGenero" />
                                                 <RadioButton fx:id="rbOutro" text="Outro" toggleGroup="$bgGenero" />
                                                 <RadioButton fx:id="rbNaoInformar" text="Não Informar" toggleGroup="$bgGenero" />
@@ -79,29 +85,40 @@
                             </content>
                         </TitledPane>
                         <TitledPane animated="false" text="Disciplinas">
-                            <content><ListView fx:id="listDisciplinas" prefHeight="100.0" /></content>
+                            <content>
+                                <ListView fx:id="listDisciplinas" prefHeight="100.0" />
+                            </content>
                         </TitledPane>
                     </children>
                     <padding>
-                        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0" />
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
                 </VBox>
             </content>
         </ScrollPane>
     </center>
     <bottom>
-        <HBox alignment="CENTER" spacing="10.0" styleClass="vbox-container">
+        <HBox alignment="CENTER" spacing="20.0" styleClass="vbox-container">
             <children>
-                <Button fx:id="btnCancelar" onAction="#limparCampos" prefWidth="120.0" text="Cancelar">
-                    <graphic><Text styleClass="icon" text="❌" /></graphic>
+                <Button fx:id="btnCancelar" onAction="#limparCampos" prefWidth="130.0" text="Cancelar">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0">
+                            <Image url="/Imagens/close_24dp_google_material_Symbols.png" />
+                        </ImageView>
+                    </graphic>
                 </Button>
-                <Button fx:id="btnSalvar" onAction="#salvarOuAtualizar" prefWidth="120.0" text="Salvar">
-                    <graphic><Text styleClass="icon" text="💾" /></graphic>
+                <Button fx:id="btnSalvar" onAction="#salvarOuAtualizar" prefWidth="130.0" text="Salvar">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0">
+                            <Image url="/Imagens/save_24dp_google_material_Symbols.png" />
+                        </ImageView>
+                    </graphic>
                 </Button>
-                <MenuButton text="Opções" styleClass="menu-button"> <items>
-                    <MenuItem text="Buscar Professor" onAction="#buscarEPreencher" />
-                    <MenuItem text="Excluir Professor" onAction="#excluir" />
-                </items>
+                <MenuButton styleClass="menu-button" text="Opções">
+                    <items>
+                        <MenuItem onAction="#buscarEPreencher" text="Buscar Professor" />
+                        <MenuItem onAction="#excluir" text="Excluir Professor" />
+                    </items>
                 </MenuButton>
             </children>
             <padding>
