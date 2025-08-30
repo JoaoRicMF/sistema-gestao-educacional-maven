@@ -46,7 +46,7 @@ src/main
 │   ├── <strong>main/</strong>           ← Classe principal (Main.java)
 │   ├── <strong>modelo/</strong>         ← Classes de modelo (Aluno, Professor, etc.)
 │   └── <strong>service/</strong>        ← Lógica de negócio e validações
-├── <strong>META-INF/</strong>         ← Metadados do projeto
+├── <strong>META-INF/</strong>           ← Metadados do projeto
 └── <strong>resources/</strong>
     ├── <strong>Imagens/</strong>        ← Imagens e ícones da aplicação
     └── <strong>gui/</strong>            ← Arquivos da interface gráfica (arquivos .fxml e .css)
