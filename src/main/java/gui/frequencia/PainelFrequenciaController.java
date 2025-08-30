@@ -30,13 +30,12 @@ public class PainelFrequenciaController {
     }
     public void setTodasAsDisciplinas(List<Disciplina> todasAsDisciplinas) {
         this.todasAsDisciplinas = todasAsDisciplinas;
-        if(cbDisciplinas != null){
-            cbDisciplinas.getItems().setAll(this.todasAsDisciplinas);
-        }
+        // Não preenchemos as disciplinas aqui inicialmente
     }
 
     @FXML
     public void initialize() {
+        if(frequenciaService == null) frequenciaService = new FrequenciaService();
         configurarComboBoxes();
 
         listAlunos.setCellFactory(CheckBoxListCell.forListView(Aluno::presenteProperty));
@@ -80,8 +79,11 @@ public class PainelFrequenciaController {
         Turma turmaSelecionada = cbTurmas.getValue();
         if (turmaSelecionada != null) {
             listAlunos.getItems().setAll(turmaSelecionada.getAlunos());
+            // Preenche as disciplinas baseadas na turma selecionada
+            cbDisciplinas.getItems().setAll(turmaSelecionada.getDisciplinas());
         } else {
             listAlunos.getItems().clear();
+            cbDisciplinas.getItems().clear();
         }
     }
     @FXML

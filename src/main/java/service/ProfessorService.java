@@ -2,10 +2,7 @@ package service;
 
 import dao.ProfessorDAO;
 import excecoes.ValidacaoExcecoes;
-import modelo.Disciplina;
 import modelo.Professor;
-import modelo.Endereco;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +21,11 @@ public class ProfessorService {
     public void cadastrarNovoProfessor(Professor novoProfessor) throws ValidacaoExcecoes {
         try {
             professorVerificacao.validar(novoProfessor);
+
+            if (professorDAO.buscarPorCpf(novoProfessor.getCpf()) != null) {
+                throw new ValidacaoExcecoes("O CPF informado já está cadastrado no sistema para outro professor.");
+            }
+
             professorDAO.salvar(novoProfessor);
             System.out.println("LOG: Professor '" + novoProfessor.getNome() + "' cadastrado com sucesso!");
         } catch (ValidacaoExcecoes e) {

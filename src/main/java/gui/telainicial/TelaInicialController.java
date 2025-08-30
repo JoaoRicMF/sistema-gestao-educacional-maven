@@ -1,108 +1,101 @@
 package gui.telainicial;
 
 import gui.PrincipalFX;
+import gui.util.Buscar;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.animation.FadeTransition;
-import javafx.util.Duration;
-import javafx.scene.Node;
+import modelo.Aluno;
+import modelo.Professor;
+
+import java.util.List;
+import java.util.Optional;
 
 public class TelaInicialController {
     private PrincipalFX mainApp;
+    private List<Aluno> todosOsAlunos;
+    private List<Professor> todosOsProfessores;
 
-    @FXML
-    private ToggleButton themeToggle;
+    @FXML private ToggleButton themeToggle;
+    @FXML private ImageView schoolIcon;
+    @FXML private Button btnAdministrativo, btnProfessor, btnAluno;
 
-    @FXML
-    private ImageView schoolIcon;
+    private ImageView lightModeIcon;
+    private ImageView darkModeIcon;
 
-    // Adicione os ImageViews para os ícones de tema aqui também
-    private final ImageView lightModeIcon = new ImageView(new Image(getClass().getResourceAsStream("/Imagens/white_mode_24dp_google_material_Symbols.png")));
-    private final ImageView darkModeIcon = new ImageView(new Image(getClass().getResourceAsStream("/Imagens/dark_mode_24dp_google_material_Symbols.png")));
 
     public void setMainApp(PrincipalFX mainApp) {
         this.mainApp = mainApp;
+        this.todosOsAlunos = mainApp.getTodosOsAlunos();
+        this.todosOsProfessores = mainApp.getTodosOsProfessores();
 
-        // Configura o tamanho dos ícones
+        lightModeIcon = new ImageView(new Image(getClass().getResourceAsStream("/Imagens/white_mode_24dp_google_material_Symbols.png")));
+        darkModeIcon = new ImageView(new Image(getClass().getResourceAsStream("/Imagens/dark_mode_24dp_google_material_Symbols.png")));
         lightModeIcon.setFitWidth(24);
         lightModeIcon.setFitHeight(24);
         darkModeIcon.setFitWidth(24);
         darkModeIcon.setFitHeight(24);
 
-        // Sincroniza o estado do botão e do ícone quando a tela é carregada
-        if (mainApp.isDarkMode()) {
-            themeToggle.setSelected(true);
-            themeToggle.setGraphic(darkModeIcon); // Define o gráfico para dark mode
-            schoolIcon.setImage(new Image(getClass().getResourceAsStream("/Imagens/icone_principal_24dp_google_material_Symbols_Dark.png")));
-        } else {
-            themeToggle.setSelected(false);
-            themeToggle.setGraphic(lightModeIcon); // Define o gráfico para light mode
-            schoolIcon.setImage(new Image(getClass().getResourceAsStream("/Imagens/icone_principal_24dp_google_material_Symbols.png")));
+        atualizarIconesDeTema();
+    }
+
+    @FXML
+    private void abrirLoginAluno(ActionEvent event) {
+        if (todosOsAlunos == null || todosOsAlunos.isEmpty()) {
+            showAlert(Alert.AlertType.INFORMATION, "Aviso", "Não há alunos cadastrados para login.");
+            return;
         }
+
+        Buscar<Aluno> buscarDialog = new Buscar<>("Login Aluno", "Selecione o seu nome na lista:", todosOsAlunos, Aluno::getNome);
+        Optional<Aluno> resultado = buscarDialog.showAndWait();
+
+        resultado.ifPresent(aluno -> mainApp.abrirJanelaPrincipal("aluno", aluno));
+    }
+
+    @FXML
+    private void abrirLoginProfessor(ActionEvent event) {
+        if (todosOsProfessores == null || todosOsProfessores.isEmpty()) {
+            showAlert(Alert.AlertType.INFORMATION, "Aviso", "Não há professores cadastrados para login.");
+            return;
+        }
+
+        Buscar<Professor> buscarDialog = new Buscar<>("Login Professor", "Selecione o seu nome na lista:", todosOsProfessores, Professor::getNome);
+        Optional<Professor> resultado = buscarDialog.showAndWait();
+
+        resultado.ifPresent(professor -> mainApp.abrirJanelaPrincipal("professor", professor));
     }
 
     @FXML
     private void abrirPainelAdministrativo(ActionEvent event) {
-        mainApp.abrirJanelaPrincipal("admin");
-    }
-
-    @FXML
-    private void abrirPainelProfessor(ActionEvent event) {
-        mainApp.abrirJanelaPrincipal("professor");
-    }
-
-    @FXML
-    private void abrirPainelAluno(ActionEvent event) {
-        mainApp.abrirJanelaPrincipal("aluno");
+        mainApp.abrirJanelaPrincipal("admin", null);
     }
 
     @FXML
     private void toggleTheme(ActionEvent event) {
         mainApp.toggleTheme();
+        atualizarIconesDeTema();
+    }
 
-        // Atualiza o botão e o ícone após a troca de tema
+    private void atualizarIconesDeTema() {
         if (mainApp.isDarkMode()) {
-            themeToggle.setSelected(true);
-            themeToggle.setGraphic(darkModeIcon); // Atualiza o gráfico para dark mode
+            themeToggle.setGraphic(darkModeIcon);
             schoolIcon.setImage(new Image(getClass().getResourceAsStream("/Imagens/icone_principal_24dp_google_material_Symbols_Dark.png")));
         } else {
-            themeToggle.setSelected(false);
-            themeToggle.setGraphic(lightModeIcon); // Atualiza o gráfico para light mode
+            themeToggle.setGraphic(lightModeIcon);
             schoolIcon.setImage(new Image(getClass().getResourceAsStream("/Imagens/icone_principal_24dp_google_material_Symbols.png")));
         }
-    }
-    @FXML
-    private Button btnAdministrativo;
-
-    @FXML
-    private Button btnProfessor;
-
-    @FXML
-    private Button btnAluno;
-
-    @FXML
-    public void initialize() {
-        // Aplica o efeito de fade in em cada botão
-        btnAdministrativo.setOpacity(0);
-        btnProfessor.setOpacity(0);
-        btnAluno.setOpacity(0);
-
-        aplicarFadeIn(btnAdministrativo, 100);
-        aplicarFadeIn(btnProfessor, 200);
-        aplicarFadeIn(btnAluno, 300);
+        themeToggle.setSelected(mainApp.isDarkMode());
     }
 
-    private void aplicarFadeIn(Node node, double delay) {
-        FadeTransition ft = new FadeTransition(Duration.millis(500), node);
-        ft.setFromValue(0.0);
-        ft.setToValue(1.0);
-        ft.setDelay(Duration.millis(delay));
-        ft.setCycleCount(1);
-        ft.setAutoReverse(false);
-        ft.play();
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

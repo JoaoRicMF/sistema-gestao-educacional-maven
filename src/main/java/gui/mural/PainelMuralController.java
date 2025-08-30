@@ -9,13 +9,17 @@ import service.MuralService;
 import java.util.List;
 
 public class PainelMuralController {
-    private final MuralService muralService = new MuralService();
+    private MuralService muralService;
     private List<Turma> todasAsTurmas;
     private List<Professor> todosOsProfessores;
 
     @FXML private ComboBox<Turma> cbTurmas;
     @FXML private TextField txtTitulo;
     @FXML private TextArea txtConteudo;
+
+    public void setMuralService(MuralService muralService) {
+        this.muralService = muralService;
+    }
 
     public void setTodasAsTurmas(List<Turma> todasAsTurmas) {
         this.todasAsTurmas = todasAsTurmas;

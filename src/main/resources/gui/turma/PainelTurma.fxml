@@ -63,8 +63,11 @@
                                 </VBox>
                             </content>
                         </TitledPane>
-                        <ListView fx:id="listAlunosMatriculados" prefHeight="150.0" />
-                        <ListView fx:id="listDisciplinasTurma" prefHeight="150.0" />
+                        <TitledPane animated="false" text="Alunos Matriculados na Turma">
+                            <content>
+                                <ListView fx:id="listAlunosMatriculados" prefHeight="200.0" />
+                            </content>
+                        </TitledPane>
                     </children>
                     <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

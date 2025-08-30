@@ -8,10 +8,6 @@ import modelo.Disciplina;
 import modelo.Professor;
 import modelo.Turma;
 
-/**
- *
- * @author João Ricardo
- */
 public class DetalhesTurmaController {
     @FXML private Label lblNomeTurma;
     @FXML private ListView<Disciplina> listDisciplinas;
@@ -21,21 +17,19 @@ public class DetalhesTurmaController {
         if (turma != null) {
             lblNomeTurma.setText("Detalhes da Turma: " + turma.getNomeTurma());
 
-            // Preenche a lista de disciplinas
             listDisciplinas.getItems().setAll(turma.getDisciplinas());
 
-            // Simulação: Adiciona o professor da turma, se houver
-            // No futuro, você pode buscar os professores associados a esta turma
-            if (turma.getAlunos() != null && !turma.getAlunos().isEmpty()){
-                // A lógica para obter o professor da turma precisa ser implementada
-                // Por enquanto, vamos simular com dados estáticos
+            Professor professor = turma.getProfessor();
+            if (professor != null) {
+                listProfessores.getItems().setAll(professor);
+            } else {
+                listProfessores.getItems().clear();
             }
         }
     }
 
     @FXML
     public void initialize() {
-        // Formata como a disciplina será exibida na lista
         listDisciplinas.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Disciplina item, boolean empty) {
@@ -44,7 +38,6 @@ public class DetalhesTurmaController {
             }
         });
 
-        // Formata como o professor será exibido na lista
         listProfessores.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Professor item, boolean empty) {
@@ -52,5 +45,7 @@ public class DetalhesTurmaController {
                 setText(empty ? null : item.getNome());
             }
         });
+
+        listProfessores.setPlaceholder(new Label("Não há professor cadastrado para esta turma."));
     }
 }

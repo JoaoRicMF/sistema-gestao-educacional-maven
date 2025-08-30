@@ -16,6 +16,7 @@ import service.MuralService;
 import service.NotaService;
 
 import java.io.IOException;
+import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,6 @@ public class PainelVisaoAlunoController {
     public void setAluno(Aluno aluno, List<Turma> todasAsTurmas) {
         this.alunoLogado = aluno;
         this.todasAsTurmas = todasAsTurmas;
-        atualizarDados();
     }
     public void setMuralService(MuralService muralService) {
         this.muralService = muralService;
@@ -51,19 +51,35 @@ public class PainelVisaoAlunoController {
         this.frequenciaService = frequenciaService;
     }
 
+    public void iniciarControlador() {
+        atualizarDados();
+    }
+
     @FXML
     public void initialize() {
         configurarListViews();
+        listTurmas.setPlaceholder(new Label("A carregar..."));
+        listMural.setPlaceholder(new Label("A carregar..."));
+        listNotas.setPlaceholder(new Label("A carregar..."));
+
         listTurmas.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 Turma turmaSelecionada = listTurmas.getSelectionModel().getSelectedItem();
                 if (turmaSelecionada != null) abrirDetalhesTurma(turmaSelecionada);
             }
         });
+
         listNotas.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 BoletimDisciplina boletim = listNotas.getSelectionModel().getSelectedItem();
                 if (boletim != null) abrirDetalhesDisciplina(boletim);
+            }
+        });
+
+        listMural.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Mural aviso = listMural.getSelectionModel().getSelectedItem();
+                if (aviso != null) abrirDetalhesAviso(aviso);
             }
         });
     }
@@ -79,23 +95,22 @@ public class PainelVisaoAlunoController {
 
         Optional<Turma> turmaDoAlunoOpt = todasAsTurmas.stream()
                 .filter(turma -> turma.getAlunos().stream()
-                        .anyMatch(aluno -> aluno.getMatricula().equals(alunoLogado.getMatricula())))
+                        .anyMatch(alunoNaTurma -> alunoNaTurma.getMatricula().equals(alunoLogado.getMatricula())))
                 .findFirst();
 
         if (turmaDoAlunoOpt.isPresent()) {
             Turma turmaDoAluno = turmaDoAlunoOpt.get();
             listTurmas.getItems().setAll(turmaDoAluno);
+            listMural.getItems().setAll(muralService.verPostagensDaTurma(turmaDoAluno));
 
-            if (muralService != null) {
-                listMural.getItems().setAll(muralService.verPostagensDaTurma(turmaDoAluno));
-            }
-
-            if (notaService != null && frequenciaService != null) {
+            if (turmaDoAluno.getDisciplinas().isEmpty()) {
+                listNotas.setPlaceholder(new Label("A sua turma não tem disciplinas cadastradas."));
+                listNotas.getItems().clear();
+            } else {
                 List<BoletimDisciplina> boletimCompleto = new ArrayList<>();
                 List<Nota> todasAsNotasDoAluno = notaService.buscarNotasDoAluno(alunoLogado);
 
                 for (Disciplina disciplina : turmaDoAluno.getDisciplinas()) {
-
                     List<Nota> notasDaDisciplina = todasAsNotasDoAluno.stream()
                             .filter(n -> n.getDisciplina().getId() == disciplina.getId())
                             .collect(Collectors.toList());
@@ -110,16 +125,23 @@ public class PainelVisaoAlunoController {
                     int faltas = totalAulas - presencas;
 
                     String status = notaService.verificarStatusAprovacao(media);
-
                     BoletimDisciplina boletimDisciplina = new BoletimDisciplina(disciplina, n1, n2, media, totalAulas, faltas, status);
                     boletimCompleto.add(boletimDisciplina);
                 }
-
                 listNotas.getItems().setAll(boletimCompleto);
             }
+        } else {
+            // Se o aluno não for encontrado em nenhuma turma
+            listTurmas.setPlaceholder(new Label("Você não está matriculado(a) em nenhuma turma."));
+            listMural.setPlaceholder(new Label("Sem avisos. Matricule-se numa turma."));
+            listNotas.setPlaceholder(new Label("Sem notas. Matricule-se numa turma."));
+            listTurmas.getItems().clear();
+            listMural.getItems().clear();
+            listNotas.getItems().clear();
         }
     }
 
+    // O resto da classe permanece igual (configurarListViews, abrirDetalhes, etc.)
     private void configurarListViews() {
         listMural.setCellFactory(lv -> new ListCell<>() {
             @Override
@@ -186,6 +208,30 @@ public class PainelVisaoAlunoController {
             dialogStage.setScene(scene);
             DetalhesDisciplinaController controller = loader.getController();
             controller.setBoletim(boletim);
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void abrirDetalhesAviso(Mural aviso) {
+        try {
+            URL resource = getClass().getResource("/gui/visaoaluno/DetalhesAviso.fxml");
+            if (resource == null) {
+                System.err.println("Erro: Não foi possível encontrar o ficheiro /gui/visaoaluno/DetalhesAviso.fxml");
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(resource);
+            VBox page = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Aviso da Turma");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(lblBoasVindas.getScene().getWindow());
+            Scene scene = new Scene(page);
+            scene.getStylesheets().addAll(lblBoasVindas.getScene().getStylesheets());
+            dialogStage.setScene(scene);
+            DetalhesAvisoController controller = loader.getController();
+            controller.setAviso(aviso);
             dialogStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();

@@ -7,16 +7,15 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?> <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <BorderPane styleClass="tela-inicial-container, root" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.telainicial.TelaInicialController">
     <top>
         <HBox alignment="CENTER_RIGHT">
-            <ToggleButton fx:id="themeToggle" onAction="#toggleTheme" text="🌙" styleClass="toggle-button" />
+            <ToggleButton fx:id="themeToggle" onAction="#toggleTheme" styleClass="toggle-button" />
             <padding>
-                <Insets top="10" right="10" />
+                <Insets right="10" top="10" />
             </padding>
         </HBox>
     </top>
@@ -34,15 +33,15 @@
                 <Label styleClass="titulo-inicial" text="Sistema de Gestão Educacional" />
                 <Label styleClass="subtitulo-inicial" text="Bem-vindo! Escolha como deseja acessar o sistema." />
 
-                <VBox styleClass="card-acesso" alignment="CENTER" spacing="15.0">
+                <VBox alignment="CENTER" spacing="15.0" styleClass="card-acesso">
                     <children>
                         <Button fx:id="btnAdministrativo" onAction="#abrirPainelAdministrativo" text="Administrativo">
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0"><Image url="/Imagens/icone_administrativo_30dp_google_material_Symbols.png" /></ImageView></graphic>
                         </Button>
-                        <Button fx:id="btnProfessor" onAction="#abrirPainelProfessor" text="Professor">
+                        <Button fx:id="btnProfessor" onAction="#abrirLoginProfessor" text="Professor">
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0"><Image url="/Imagens/icone_professor_30dp_google_material_Symbols.png" /></ImageView></graphic>
                         </Button>
-                        <Button fx:id="btnAluno" onAction="#abrirPainelAluno" text="Aluno">
+                        <Button fx:id="btnAluno" onAction="#abrirLoginAluno" text="Aluno">
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0"><Image url="/Imagens/icone_aluno_30dp_google_material_Symbols.png" /></ImageView></graphic>
                         </Button>
                     </children>

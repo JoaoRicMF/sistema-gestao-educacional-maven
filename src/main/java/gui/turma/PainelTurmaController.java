@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import modelo.*;
 import service.TurmaService;
+import dao.TurmaDAO;
 import java.util.List;
 import gui.util.BuscaController;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +21,7 @@ import java.io.IOException;
 public class PainelTurmaController {
 
     private TurmaService turmaService;
+    private TurmaDAO turmaDAO;
     private List<Professor> listaDeProfessores;
     private List<Disciplina> todasAsDisciplinas;
     private Turma turmaCarregada;
@@ -30,7 +32,6 @@ public class PainelTurmaController {
     @FXML private ComboBox<Professor> cbProfessor;
     @FXML private ComboBox<Disciplina> cbDisciplinasDisponiveis;
     @FXML private ListView<Aluno> listAlunosMatriculados;
-    @FXML private ListView<Disciplina> listDisciplinasTurma;
     @FXML private Button btnAdicionarDisciplina, btnRemoverAluno,btnBuscar;
 
     public void setTurmaService(TurmaService turmaService) { this.turmaService = turmaService; }
@@ -53,6 +54,7 @@ public class PainelTurmaController {
     @FXML
     public void initialize() {
         if (turmaService == null) turmaService = new TurmaService();
+        if (turmaDAO == null) turmaDAO = new TurmaDAO();
         Validacoes.addRequiredFieldValidator(txtNomeTurma);
         Validacoes.addRequiredFieldValidator(txtSerieAno);
 
@@ -67,18 +69,13 @@ public class PainelTurmaController {
                 setText(empty ? null : aluno.getNome());
             }
         });
-        listDisciplinasTurma.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(Disciplina disciplina, boolean empty) {
-                super.updateItem(disciplina, empty);
-                setText(empty ? null : disciplina.getNomeDisciplina());
-            }
-        });
+
+        listAlunosMatriculados.setPlaceholder(new Label("Não há alunos matriculados nesta turma."));
+
         limparCampos();
     }
 
     private void configurarComboBoxes() {
-        // Exibe o nome do Professor na ComboBox
         cbProfessor.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Professor professor, boolean empty) {
@@ -116,14 +113,17 @@ public class PainelTurmaController {
             String nomeTurma = txtNomeTurma.getText();
             int serieAno = Integer.parseInt(txtSerieAno.getText());
             Turno turno = cbTurno.getValue();
+            Professor professorSelecionado = cbProfessor.getValue();
 
             if (turmaCarregada != null) {
                 turmaCarregada.setNomeTurma(nomeTurma);
                 turmaCarregada.setSemestre(serieAno);
                 turmaCarregada.setTurno(turno);
+                turmaCarregada.setProfessor(professorSelecionado);
+                turmaService.atualizarTurma(turmaCarregada);
                 showAlert(AlertType.INFORMATION, "Sucesso", "Turma '" + nomeTurma + "' atualizada com sucesso!");
             } else {
-                Turma novaTurma = turmaService.cadastrarNovaTurma(nomeTurma, serieAno, turno);
+                Turma novaTurma = turmaService.cadastrarNovaTurma(nomeTurma, serieAno, turno, professorSelecionado);
                 if (todasAsTurmas != null) {
                     todasAsTurmas.add(novaTurma);
                 }
@@ -169,23 +169,54 @@ public class PainelTurmaController {
     }
     @FXML
     private void adicionarDisciplinaNaTurma() {
+        if (turmaCarregada == null) {
+            showAlert(AlertType.WARNING, "Aviso", "Nenhuma turma carregada. Busque e carregue uma turma primeiro.");
+            return;
+        }
+        Disciplina disciplinaSelecionada = cbDisciplinasDisponiveis.getValue();
+        if (disciplinaSelecionada == null) {
+            showAlert(AlertType.WARNING, "Aviso", "Selecione uma disciplina para adicionar.");
+            return;
+        }
+
+        if (!turmaCarregada.getDisciplinas().contains(disciplinaSelecionada)) {
+            turmaCarregada.adicionarDisciplina(disciplinaSelecionada);
+            turmaDAO.adicionarDisciplinaNaTurma(turmaCarregada.getId(), disciplinaSelecionada.getId());
+            atualizarListasDaTurma();
+            showAlert(AlertType.INFORMATION, "Sucesso", "Disciplina adicionada à grade da turma.");
+        } else {
+            showAlert(AlertType.INFORMATION, "Aviso", "Esta disciplina já está na grade desta turma.");
+        }
     }
     @FXML
     private void removerAlunoDaTurma() {
+        if (turmaCarregada == null) {
+            showAlert(AlertType.WARNING, "Aviso", "Nenhuma turma carregada.");
+            return;
+        }
+        Aluno alunoSelecionado = listAlunosMatriculados.getSelectionModel().getSelectedItem();
+        if (alunoSelecionado == null) {
+            showAlert(AlertType.WARNING, "Aviso", "Selecione um aluno para remover.");
+            return;
+        }
+
+        turmaCarregada.removerAluno(alunoSelecionado);
+        turmaDAO.removerAlunoDaTurma(turmaCarregada.getId(), alunoSelecionado.getMatricula());
+        atualizarListasDaTurma();
+        showAlert(AlertType.INFORMATION, "Sucesso", "Aluno removido da turma.");
     }
     private void carregarDadosParaFormulario(Turma turma) {
         txtNomeTurma.setText(turma.getNomeTurma());
         txtSerieAno.setText(String.valueOf(turma.getSemestre()));
         cbTurno.setValue(turma.getTurno());
+        cbProfessor.setValue(turma.getProfessor());
         atualizarListasDaTurma();
     }
     private void atualizarListasDaTurma() {
         if (turmaCarregada != null) {
             listAlunosMatriculados.getItems().setAll(turmaCarregada.getAlunos());
-            listDisciplinasTurma.getItems().setAll(turmaCarregada.getDisciplinas());
         } else {
             listAlunosMatriculados.getItems().clear();
-            listDisciplinasTurma.getItems().clear();
         }
     }
     @FXML

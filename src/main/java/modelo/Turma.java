@@ -3,16 +3,12 @@ package modelo;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author João Ricardo
- */
-
 public class Turma {
     private int id;
     private String nomeTurma;
     private int semestre;
     private Turno turno;
+    private Professor professor;
     private List<Aluno> alunos;
     private List<Disciplina> disciplinas;
 
@@ -23,6 +19,15 @@ public class Turma {
         this.alunos = new ArrayList<>();
         this.disciplinas = new ArrayList<>();
     }
+
+    public Professor getProfessor() {
+        return professor;
+    }
+
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
+    }
+
     public void adicionarAluno(Aluno aluno){
         alunos.add(aluno);
     }

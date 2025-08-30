@@ -19,7 +19,7 @@
                 <ListView fx:id="listDisciplinas" prefHeight="200.0" />
             </content>
         </TitledPane>
-        <TitledPane animated="false" text="Professores (Simulado)">
+        <TitledPane animated="false" text="Professores">
             <content>
                 <ListView fx:id="listProfessores" prefHeight="150.0" />
             </content>

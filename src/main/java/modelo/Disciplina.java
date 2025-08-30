@@ -2,6 +2,7 @@ package modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -55,5 +56,18 @@ public class Disciplina {
     @Override
     public String toString() {
         return this.getNomeDisciplina();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Disciplina that = (Disciplina) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

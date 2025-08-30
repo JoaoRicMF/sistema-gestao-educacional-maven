@@ -1,31 +1,30 @@
 package service;
 
-import dao.AlunoDAO; // Importe o AlunoDAO
+import dao.AlunoDAO;
 import modelo.Aluno;
 import excecoes.ValidacaoExcecoes;
 import modelo.Endereco;
 import modelo.StatusAluno;
 import java.util.Optional;
 
-/**
- *
- * @author João Ricardo
- */
-
 public class AlunoService {
 
     private final AlunoVerificacao alunoVerificacao = new AlunoVerificacao();
-    private final AlunoDAO alunoDAO = new AlunoDAO(); // Instancie o AlunoDAO
+    private final AlunoDAO alunoDAO = new AlunoDAO();
 
     public Optional<Aluno> buscarAlunoPorMatricula(String matricula) {
-        // Agora busca diretamente do banco de dados
         return Optional.ofNullable(alunoDAO.buscarPorMatricula(matricula));
     }
 
     public void cadastrarNovoAluno(Aluno aluno) throws ValidacaoExcecoes {
         try {
             alunoVerificacao.validarAluno(aluno);
-            // Chama o metodo do DAO para salvar no banco
+
+            if (alunoDAO.buscarPorCpf(aluno.getCpf()) != null) {
+                throw new ValidacaoExcecoes("O CPF informado já está cadastrado no sistema.");
+            }
+            // ---------------------
+
             alunoDAO.salvar(aluno);
             System.out.println("LOG: Aluno '" + aluno.getNome() + "' cadastrado com sucesso!");
         } catch (ValidacaoExcecoes e) {
@@ -47,7 +46,6 @@ public class AlunoService {
             aluno.setEmail(novoEmail);
             aluno.setEndereco(novoEndereco);
 
-            // Chama o metodo do DAO para atualizar no banco
             alunoDAO.atualizar(aluno);
             System.out.println("LOG: Dados do aluno '" + aluno.getNome() + "' atualizados com sucesso!");
         } catch (ValidacaoExcecoes e) {
@@ -60,8 +58,6 @@ public class AlunoService {
         try {
             alunoVerificacao.validarAluno(aluno);
             aluno.setStatusAluno(StatusAluno.INATIVO);
-
-            // Atualiza o status do aluno no banco de dados
             alunoDAO.atualizar(aluno);
             System.out.println("LOG: Aluno '" + aluno.getNome() + "' desativado com sucesso.");
         } catch (ValidacaoExcecoes e) {
@@ -75,8 +71,6 @@ public class AlunoService {
             alunoVerificacao.validarAluno(aluno);
             int semestreAtual = aluno.getSemestre();
             aluno.setSemestre(semestreAtual + 1);
-
-            // Atualiza o semestre no banco
             alunoDAO.atualizar(aluno);
             System.out.println("LOG: Aluno " + aluno.getNome() + " passou para o semestre " + aluno.getSemestre());
         } catch (ValidacaoExcecoes e) {
@@ -92,8 +86,6 @@ public class AlunoService {
                 throw new ValidacaoExcecoes("Apenas alunos ATIVOS podem trancar a matrícula.");
             }
             aluno.setStatusAluno(StatusAluno.TRANCADO);
-
-            // Atualiza o status no banco
             alunoDAO.atualizar(aluno);
             System.out.println("LOG: Matrícula do aluno '" + aluno.getNome() + "' foi trancada.");
         } catch (ValidacaoExcecoes e) {

@@ -19,7 +19,6 @@ import java.util.List;
 public class AlunoDAO {
 
     public void salvar(Aluno aluno) {
-        // CORRIGIDO: Nome da tabela para "aluno" (singular)
         String sql = "INSERT INTO aluno (matricula, nome, cpf, rg, genero, data_nascimento, telefone, email, curso, tipo_curso, semestre, nivel_academico, status_aluno, rua, numero, complemento, bairro, cidade, uf, cep) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Conexao.getConexao();
@@ -56,7 +55,6 @@ public class AlunoDAO {
     }
 
     public List<Aluno> listarTodos() {
-        // CORRIGIDO: Nome da tabela para "aluno" (singular)
         String sql = "SELECT * FROM aluno";
         List<Aluno> alunos = new ArrayList<>();
 
@@ -84,13 +82,11 @@ public class AlunoDAO {
 
         } catch (SQLException e) {
             System.err.println("Erro ao listar alunos: " + e.getMessage());
-            // Não precisa do printStackTrace aqui para não poluir o console, a mensagem de erro já é clara.
         }
         return alunos;
     }
 
     public void atualizar(Aluno aluno) {
-        // CORRIGIDO: Nome da tabela para "aluno" (singular)
         String sql = "UPDATE aluno SET nome = ?, cpf = ?, rg = ?, genero = ?, data_nascimento = ?, telefone = ?, email = ?, curso = ?, tipo_curso = ?, semestre = ?, nivel_academico = ?, status_aluno = ?, rua = ?, numero = ?, complemento = ?, bairro = ?, cidade = ?, uf = ?, cep = ? WHERE matricula = ?";
 
         try (Connection conn = Conexao.getConexao();
@@ -127,7 +123,6 @@ public class AlunoDAO {
     }
 
     public void excluir(String matricula) {
-        // CORRIGIDO: Nome da tabela para "aluno" (singular)
         String sql = "DELETE FROM aluno WHERE matricula = ?";
 
         try (Connection conn = Conexao.getConexao();
@@ -144,7 +139,6 @@ public class AlunoDAO {
     }
 
     public Aluno buscarPorMatricula(String matricula) {
-        // CORRIGIDO: Nome da tabela para "aluno" (singular)
         String sql = "SELECT * FROM aluno WHERE matricula = ?";
         Aluno aluno = null;
 
@@ -172,6 +166,26 @@ public class AlunoDAO {
             }
         } catch (SQLException e) {
             System.err.println("Erro ao buscar aluno: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return aluno;
+    }
+
+    public Aluno buscarPorCpf(String cpf) {
+        String sql = "SELECT * FROM aluno WHERE cpf = ?";
+        Aluno aluno = null;
+
+        try (Connection conn = Conexao.getConexao();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, cpf);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                aluno = new Aluno(rs.getString("nome"), rs.getString("cpf"), null, null, null, null, null, null, rs.getString("matricula"), null, null, 0, null, null, 0, 0, 0);
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar aluno por CPF: " + e.getMessage());
             e.printStackTrace();
         }
         return aluno;

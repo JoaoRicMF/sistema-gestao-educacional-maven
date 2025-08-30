@@ -46,6 +46,7 @@ public class PainelProfessorController {
 
     @FXML
     public void initialize() {
+        if (professorService == null) professorService = new ProfessorService();
         cbUF.getItems().setAll(UF.values());
 
         Mask.addCPFMask(txtCPF);
@@ -94,7 +95,6 @@ public class PainelProfessorController {
             Endereco endereco = new Endereco(rua, numero, complemento, bairro, cidade, uf, cep);
 
             if (professorCarregado != null) {
-                // ATUALIZA O OBJETO ANTES DE ENVIAR PARA O SERVICE
                 professorCarregado.setNome(nome);
                 professorCarregado.setCpf(cpf);
                 professorCarregado.setDataNascimento(dataNascimento);
@@ -105,14 +105,11 @@ public class PainelProfessorController {
                 professorCarregado.setEmail(email);
                 professorCarregado.setEndereco(endereco);
                 professorCarregado.setDisciplinas(disciplinasSelecionadas);
-
-                // CORREÇÃO: Chama o método com a assinatura correta
                 professorService.atualizarDadosProfessor(professorCarregado);
                 showAlert(AlertType.INFORMATION, "Sucesso", "Dados do professor '" + professorCarregado.getNome() + "' atualizados com sucesso! ✅");
             } else {
                 Professor novoProfessor = new Professor(nome, cpf, rg, genero, dataNascimento, telefone, email, endereco, matricula);
                 novoProfessor.setDisciplinas(disciplinasSelecionadas);
-
                 professorService.cadastrarNovoProfessor(novoProfessor);
                 todosOsProfessores.add(novoProfessor);
                 showAlert(AlertType.INFORMATION, "Sucesso", "Professor '" + nome + "' cadastrado com sucesso! ✅");
@@ -123,7 +120,6 @@ public class PainelProfessorController {
         }
     }
 
-    // O restante da classe (buscar, limpar, etc.) permanece o mesmo...
     private Genero getGeneroSelecionado() {
         if (rbMasculino.isSelected()) return Genero.MASCULINO;
         if (rbFeminino.isSelected()) return Genero.FEMININO;
@@ -131,6 +127,7 @@ public class PainelProfessorController {
         if (rbNaoInformar.isSelected()) return Genero.NAO_INFORMAR;
         return null;
     }
+
     private void carregarDadosParaFormulario(Professor prof) {
         txtNome.setText(prof.getNome());
         txtCPF.setText(prof.getCpf());
@@ -161,6 +158,7 @@ public class PainelProfessorController {
             txtCEP.setText(end.getCep());
             cbUF.setValue(end.getUf());
         }
+
         listDisciplinas.getSelectionModel().clearSelection();
         if (prof.getDisciplinas() != null && !prof.getDisciplinas().isEmpty()) {
             listDisciplinas.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -169,6 +167,7 @@ public class PainelProfessorController {
             }
         }
     }
+
     @FXML
     private void limparCampos() {
         txtNome.clear();
@@ -191,6 +190,7 @@ public class PainelProfessorController {
         listDisciplinas.getSelectionModel().clearSelection();
         this.professorCarregado = null;
     }
+
     @FXML
     private void buscarEPreencher() {
         if (todosOsProfessores == null || todosOsProfessores.isEmpty()) {
@@ -218,6 +218,7 @@ public class PainelProfessorController {
             showAlert(AlertType.ERROR, "Erro", "Não foi possível abrir a janela de busca.");
         }
     }
+
     @FXML
     private void excluir() {
         if (professorCarregado == null) {
@@ -240,6 +241,7 @@ public class PainelProfessorController {
             }
         }
     }
+
     public void atualizarListaDisciplinasGUI() {
         if (todasAsDisciplinas != null) {
             listDisciplinas.getItems().setAll(todasAsDisciplinas);
@@ -250,8 +252,10 @@ public class PainelProfessorController {
                     setText(empty ? null : disciplina.getNomeDisciplina());
                 }
             });
+            listDisciplinas.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         }
     }
+
     private void showAlert(AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

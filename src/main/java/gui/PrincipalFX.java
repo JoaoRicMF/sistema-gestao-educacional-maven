@@ -14,6 +14,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -49,14 +50,13 @@ public class PrincipalFX extends Application {
     private Stage primaryStage;
     private Scene scene;
     private boolean isDarkMode = false;
+    private Object usuarioLogado;
 
-    // --- DAOs ---
     private final AlunoDAO alunoDAO = new AlunoDAO();
     private final ProfessorDAO professorDAO = new ProfessorDAO();
     private final DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
     private final TurmaDAO turmaDAO = new TurmaDAO();
 
-    // --- Serviços ---
     private final AlunoService alunoService = new AlunoService();
     private final ProfessorService professorService = new ProfessorService();
     private final DisciplinaService disciplinaService = new DisciplinaService();
@@ -66,7 +66,6 @@ public class PrincipalFX extends Application {
     private final FrequenciaService frequenciaService = new FrequenciaService();
     private final MuralService muralService = new MuralService();
 
-    // --- Listas de Dados ---
     private final List<Disciplina> todasAsDisciplinas = new ArrayList<>();
     private final List<Professor> todosOsProfessores = new ArrayList<>();
     private final List<Aluno> todosOsAlunos = new ArrayList<>();
@@ -74,6 +73,9 @@ public class PrincipalFX extends Application {
 
     private String lightTheme;
     private String darkTheme;
+
+    public List<Aluno> getTodosOsAlunos() { return todosOsAlunos; }
+    public List<Professor> getTodosOsProfessores() { return todosOsProfessores; }
 
     @Override
     public void start(Stage primaryStage) {
@@ -83,14 +85,36 @@ public class PrincipalFX extends Application {
         lightTheme = getClass().getResource("/gui/css/styles.css").toExternalForm();
         darkTheme = getClass().getResource("/gui/css/dark-theme.css").toExternalForm();
 
-        Parent root = carregarFXML("/gui/telainicial/TelaInicial.fxml");
-        if (root == null) return;
-
-        scene = new Scene(root);
+        VBox loadingLayout = criarLayoutCarregamento("A carregar dados iniciais...");
+        scene = new Scene(loadingLayout);
         atualizarTema();
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();
+
+        carregarDadosEExibirTelaInicial();
+    }
+
+    private void carregarDadosEExibirTelaInicial() {
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                carregarDadosIniciaisDoBanco();
+                return null;
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            Parent root = carregarFXML("/gui/telainicial/TelaInicial.fxml");
+            navegarPara(root);
+        });
+
+        task.setOnFailed(e -> {
+            task.getException().printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erro de Conexão", "Não foi possível carregar os dados do banco.");
+        });
+
+        new Thread(task).start();
     }
 
     public boolean isDarkMode() {
@@ -116,47 +140,33 @@ public class PrincipalFX extends Application {
     }
 
     public void mostrarTelaInicial() {
-        Parent root = carregarFXML("/gui/telainicial/TelaInicial.fxml");
-        navegarPara(root);
-    }
-
-    public void abrirJanelaPrincipal(String perfil) {
-        VBox loadingLayout = new VBox(20);
-        loadingLayout.setAlignment(Pos.CENTER);
-        loadingLayout.getChildren().add(new ProgressIndicator());
-        loadingLayout.getChildren().add(new Label("A carregar dados do banco..."));
-        loadingLayout.getStyleClass().add("root");
+        VBox loadingLayout = criarLayoutCarregamento("A regressar ao início...");
         navegarPara(loadingLayout);
 
-        Task<Void> carregarDadosTask = new Task<>() {
+        carregarDadosEExibirTelaInicial();
+    }
+
+    public void abrirJanelaPrincipal(String perfil, Object usuario) {
+        this.usuarioLogado = usuario;
+
+        VBox loadingLayout = criarLayoutCarregamento("A carregar painel...");
+        navegarPara(loadingLayout);
+
+        Task<Void> task = new Task<>() {
             @Override
             protected Void call() throws Exception {
-                System.out.println("Iniciando carregamento de dados em background...");
-                carregarDadosIniciaisDoBanco();
-                System.out.println("Dados carregados.");
+                BorderPane layoutPrincipal = criarLayoutPrincipal(perfil);
+                Platform.runLater(() -> navegarPara(layoutPrincipal));
                 return null;
             }
         };
 
-        carregarDadosTask.setOnSucceeded(e -> {
-            System.out.println("Tarefa de carregamento concluída. Construindo e exibindo a UI...");
-            try {
-                BorderPane layoutPrincipal = criarLayoutPrincipal(perfil);
-                navegarPara(layoutPrincipal);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Erro Crítico", "Falha ao construir a interface principal.");
-            }
+        task.setOnFailed(e -> {
+            task.getException().printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erro Crítico", "Falha ao construir a interface principal.");
         });
 
-        carregarDadosTask.setOnFailed(e -> {
-            System.err.println("A tarefa de carregamento de dados falhou.");
-            carregarDadosTask.getException().printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Erro de Conexão", "Não foi possível conectar ao banco de dados.\nVerifique sua conexão ou contate o suporte.");
-            mostrarTelaInicial();
-        });
-
-        new Thread(carregarDadosTask).start();
+        new Thread(task).start();
     }
 
     private void carregarDadosIniciaisDoBanco() {
@@ -169,17 +179,13 @@ public class PrincipalFX extends Application {
         todosOsProfessores.addAll(professorDAO.listarTodos());
         todasAsDisciplinas.addAll(disciplinaDAO.listarTodas());
         todasAsTurmas.addAll(turmaDAO.listarTodas());
-
-        System.out.println("Dados carregados do banco: " + todosOsAlunos.size() + " alunos, "
-                + todosOsProfessores.size() + " professores, " + todasAsDisciplinas.size() + " disciplinas, "
-                + todasAsTurmas.size() + " turmas.");
     }
 
     private BorderPane criarLayoutPrincipal(String perfil) throws IOException {
         TabPane tabPane = new TabPane();
         VBox.setVgrow(tabPane, Priority.ALWAYS);
 
-        if ("admin".equals(perfil)) {
+        if ("admin".equals(perfil) || "administrativo".equals(perfil)) {
             carregarAbasAdministrativas(tabPane);
         } else if ("professor".equals(perfil)) {
             tabPane.getTabs().add(carregarAba("notas/PainelNotas.fxml", "LANÇAR NOTAS"));
@@ -204,9 +210,19 @@ public class PrincipalFX extends Application {
         layoutPrincipal.setCenter(tabPane);
         layoutPrincipal.setBottom(footer);
         BorderPane.setMargin(tabPane, new Insets(15));
-        primaryStage.setTitle("Sistema de Gestão Educacional - Painel Principal");
+
+        Platform.runLater(() -> primaryStage.setTitle("Sistema de Gestão Educacional - Painel Principal"));
 
         return layoutPrincipal;
+    }
+
+    private VBox criarLayoutCarregamento(String mensagem) {
+        VBox loadingLayout = new VBox(20);
+        loadingLayout.setAlignment(Pos.CENTER);
+        loadingLayout.getChildren().add(new ProgressIndicator());
+        loadingLayout.getChildren().add(new Label(mensagem));
+        loadingLayout.getStyleClass().add("root");
+        return loadingLayout;
     }
 
     private HBox criarCabecalho() {
@@ -224,7 +240,6 @@ public class PrincipalFX extends Application {
         relogioTimeline.setCycleCount(Animation.INDEFINITE);
         relogioTimeline.play();
 
-        // Crie os ImageViews para os ícones de tema
         ImageView lightModeIcon = new ImageView(new Image(getClass().getResourceAsStream("/Imagens/white_mode_24dp_google_material_Symbols.png")));
         ImageView darkModeIcon = new ImageView(new Image(getClass().getResourceAsStream("/Imagens/dark_mode_24dp_google_material_Symbols.png")));
         lightModeIcon.setFitWidth(24);
@@ -232,14 +247,13 @@ public class PrincipalFX extends Application {
         darkModeIcon.setFitWidth(24);
         darkModeIcon.setFitHeight(24);
 
-
         ToggleButton themeToggle = new ToggleButton();
         themeToggle.getStyleClass().add("toggle-button");
-        themeToggle.setGraphic(isDarkMode ? darkModeIcon : lightModeIcon); // Define o gráfico inicial
+        themeToggle.setGraphic(isDarkMode ? darkModeIcon : lightModeIcon);
         themeToggle.setSelected(isDarkMode);
         themeToggle.setOnAction(event -> {
             toggleTheme();
-            themeToggle.setGraphic(isDarkMode ? darkModeIcon : lightModeIcon); // Atualiza o gráfico
+            themeToggle.setGraphic(isDarkMode ? darkModeIcon : lightModeIcon);
         });
 
         Region spacer = new Region();
@@ -261,10 +275,10 @@ public class PrincipalFX extends Application {
             scene.getStylesheets().clear();
             if (isDarkMode) {
                 scene.getStylesheets().add(darkTheme);
-                scene.setFill(Color.valueOf("#1e1e1e"));
+                scene.setFill(Color.valueOf("#1e1e1e")); // Define o fundo da cena para preto
             } else {
                 scene.getStylesheets().add(lightTheme);
-                scene.setFill(Color.valueOf("#F4F6F8"));
+                scene.setFill(Color.valueOf("#f8f9fa")); // Define o fundo da cena para o cinza claro
             }
         }
     }
@@ -291,19 +305,21 @@ public class PrincipalFX extends Application {
             throw new IOException("Não foi possível encontrar o ficheiro FXML: /gui/" + fxmlFile);
         }
         FXMLLoader loader = new FXMLLoader(resourceUrl);
-
         Parent root = loader.load();
-
         Object controller = loader.getController();
 
+        // Injeção de dependências...
         if (controller instanceof PainelAlunoController) {
             ((PainelAlunoController) controller).setTodosOsAlunos(todosOsAlunos);
         } else if (controller instanceof PainelProfessorController) {
+            ((PainelProfessorController) controller).setProfessorService(professorService);
             ((PainelProfessorController) controller).setTodosOsProfessores(todosOsProfessores);
             ((PainelProfessorController) controller).setTodasAsDisciplinas(todasAsDisciplinas);
         } else if (controller instanceof PainelDisciplinaController) {
+            ((PainelDisciplinaController) controller).setService(disciplinaService);
             ((PainelDisciplinaController) controller).setTodasAsDisciplinas(todasAsDisciplinas);
         } else if (controller instanceof PainelTurmaController) {
+            ((PainelTurmaController) controller).setTurmaService(turmaService);
             ((PainelTurmaController) controller).setTodasAsTurmas(todasAsTurmas);
             ((PainelTurmaController) controller).setListaDeProfessores(todosOsProfessores);
             ((PainelTurmaController) controller).setTodasAsDisciplinas(todasAsDisciplinas);
@@ -312,23 +328,28 @@ public class PrincipalFX extends Application {
             ((PainelMatriculaController) controller).setListaDeAlunos(todosOsAlunos);
             ((PainelMatriculaController) controller).setListaDeTurmas(todasAsTurmas);
         } else if (controller instanceof PainelNotasController) {
+            ((PainelNotasController) controller).setNotaService(notaService);
             ((PainelNotasController) controller).setListaDeAlunos(todosOsAlunos);
             ((PainelNotasController) controller).setListaDeDisciplinas(todasAsDisciplinas);
         } else if (controller instanceof PainelFrequenciaController) {
-            ((PainelFrequenciaController) controller).setTodasAsTurmas(todasAsTurmas);
-            ((PainelFrequenciaController) controller).setTodasAsDisciplinas(todasAsDisciplinas);
+            PainelFrequenciaController painelController = (PainelFrequenciaController) controller;
+            painelController.setFrequenciaService(frequenciaService);
+            painelController.setTodasAsTurmas(todasAsTurmas);
+            painelController.setTodasAsDisciplinas(todasAsDisciplinas);
         } else if (controller instanceof PainelMuralController) {
+            ((PainelMuralController) controller).setMuralService(muralService);
             ((PainelMuralController) controller).setTodasAsTurmas(todasAsTurmas);
             ((PainelMuralController) controller).setTodosOsProfessores(todosOsProfessores);
         } else if (controller instanceof PainelVisaoAlunoController) {
-            if (!todosOsAlunos.isEmpty()) {
-                ((PainelVisaoAlunoController) controller).setAluno(todosOsAlunos.get(0), todasAsTurmas);
-                ((PainelVisaoAlunoController) controller).setMuralService(muralService);
-                ((PainelVisaoAlunoController) controller).setNotaService(notaService);
-                ((PainelVisaoAlunoController) controller).setFrequenciaService(frequenciaService);
+            if (usuarioLogado instanceof Aluno) {
+                PainelVisaoAlunoController painelController = (PainelVisaoAlunoController) controller;
+                painelController.setAluno((Aluno) usuarioLogado, todasAsTurmas);
+                painelController.setMuralService(muralService);
+                painelController.setNotaService(notaService);
+                painelController.setFrequenciaService(frequenciaService);
+                painelController.iniciarControlador();
             }
         }
-
 
         Tab tab = new Tab(tabTitle, root);
         tab.setClosable(false);
@@ -343,38 +364,6 @@ public class PrincipalFX extends Application {
         tabPane.getTabs().add(carregarAba("matricula/PainelMatricula.fxml", "MATRICULA DE ALUNO"));
     }
 
-    private void carregarDadosIniciais() {
-        if (todosOsAlunos.isEmpty()) {
-            todosOsAlunos.addAll(alunoDAO.listarTodos());
-        }
-        if (todasAsDisciplinas.isEmpty()) {
-            Disciplina disciplina1 = new Disciplina("Programação Orientada a Objetos", 80, 2);
-            Disciplina disciplina2 = new Disciplina("Estrutura de Dados", 60, 3);
-            todasAsDisciplinas.add(disciplina1);
-            todasAsDisciplinas.add(disciplina2);
-
-            Professor professor1 = new Professor("Prof. Andre", "11122233344", "1234567",
-                    Genero.MASCULINO, "01/01/1980", "11987654321", "prof.andre@escola.com", null, "PROF001");
-            todosOsProfessores.add(professor1);
-
-            if(todosOsAlunos.isEmpty()){
-                Aluno aluno1 = new Aluno("Aluno Teste", "12312312312", "1234567",
-                        Genero.NAO_INFORMAR, "10/10/2000", "11988887777", "aluno@escola.com", null,
-                        "ALN123456", "Ciência da Computação", TipoCurso.PRESENCIAL, 1,
-                        NivelAcademico.GRADUACAO_EM_ANDAMENTO, StatusAluno.ATIVO, 0, 0, 0);
-                todosOsAlunos.add(aluno1);
-            }
-
-
-            Turma turma1 = new Turma("Turma A", 1, Turno.MANHA);
-            if(!todosOsAlunos.isEmpty()){
-                turma1.adicionarAluno(todosOsAlunos.get(0));
-            }
-            turma1.adicionarDisciplina(disciplina1);
-            turma1.adicionarDisciplina(disciplina2);
-            todasAsTurmas.add(turma1);
-        }
-    }
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
