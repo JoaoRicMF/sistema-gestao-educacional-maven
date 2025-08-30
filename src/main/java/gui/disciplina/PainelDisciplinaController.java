@@ -39,9 +39,6 @@ public class PainelDisciplinaController {
 
     @FXML
     public void initialize() {
-        if (this.disciplinaService == null) {
-            this.disciplinaService = new DisciplinaService();
-        }
         Validacoes.addRequiredFieldValidator(txtNomeDisciplina);
         Validacoes.addRequiredFieldValidator(txtCargaHoraria);
         Validacoes.addRequiredFieldValidator(txtSerieSemestre);
@@ -56,7 +53,11 @@ public class PainelDisciplinaController {
             int serieSemestre = Integer.parseInt(txtSerieSemestre.getText());
 
             if (disciplinaCarregada != null) {
-                disciplinaService.atualizarDadosDisciplina(disciplinaCarregada, nome, cargaHoraria, serieSemestre);
+                disciplinaCarregada.setNomeDisciplina(nome);
+                disciplinaCarregada.setCargaHoraria(cargaHoraria);
+                disciplinaCarregada.setSerieSemestre(serieSemestre);
+
+                disciplinaService.atualizarDadosDisciplina(disciplinaCarregada);
                 showAlert(AlertType.INFORMATION, "Sucesso", "Disciplina '" + nome + "' atualizada com sucesso!");
             } else {
                 Disciplina novaDisciplina = disciplinaService.cadastrarNovaDisciplina(nome, cargaHoraria, serieSemestre);
@@ -80,7 +81,6 @@ public class PainelDisciplinaController {
             showAlert(AlertType.INFORMATION, "Aviso", "Não há disciplinas cadastradas para buscar.");
             return;
         }
-
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/util/Busca.fxml"));
             VBox page = loader.load();
@@ -88,12 +88,9 @@ public class PainelDisciplinaController {
             dialogStage.setTitle("Buscar Disciplina");
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setScene(new Scene(page));
-
             BuscaController<Disciplina> controller = loader.getController();
             controller.setItens(todasAsDisciplinas, Disciplina::getNomeDisciplina);
-
             dialogStage.showAndWait();
-
             Disciplina disciplinaSelecionada = controller.getItemSelecionado();
             if (disciplinaSelecionada != null) {
                 this.disciplinaCarregada = disciplinaSelecionada;
@@ -105,19 +102,16 @@ public class PainelDisciplinaController {
             showAlert(AlertType.ERROR, "Erro", "Não foi possível abrir a janela de busca.");
         }
     }
-
     @FXML
     private void excluirDisciplina(ActionEvent event) {
         if (disciplinaCarregada == null) {
             showAlert(AlertType.WARNING, "Aviso", "Nenhuma disciplina carregada. Busque uma primeiro.");
             return;
         }
-
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Confirmação");
         alert.setHeaderText(null);
         alert.setContentText("Tem certeza que deseja excluir a disciplina '" + disciplinaCarregada.getNomeDisciplina() + "'?");
-
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
@@ -132,13 +126,11 @@ public class PainelDisciplinaController {
             }
         }
     }
-
     private void carregarDadosParaFormulario(Disciplina disciplina) {
         txtNomeDisciplina.setText(disciplina.getNomeDisciplina());
         txtCargaHoraria.setText(String.valueOf(disciplina.getCargaHoraria()));
         txtSerieSemestre.setText(String.valueOf(disciplina.getSerieSemestre()));
     }
-
     @FXML
     void limparCampos(ActionEvent event) {
         txtNomeDisciplina.clear();
@@ -146,7 +138,6 @@ public class PainelDisciplinaController {
         txtSerieSemestre.clear();
         this.disciplinaCarregada = null;
     }
-
     private void showAlert(AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

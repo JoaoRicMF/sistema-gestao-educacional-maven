@@ -37,13 +37,44 @@ public class PainelFrequenciaController {
 
     @FXML
     public void initialize() {
-        // Configura a ListView para usar CheckBoxes
-        listAlunos.setCellFactory(CheckBoxListCell.forListView(Aluno::presenteProperty));
+        configurarComboBoxes();
 
-        dpData.setValue(LocalDate.now()); // Define a data atual como padrão
+        listAlunos.setCellFactory(CheckBoxListCell.forListView(Aluno::presenteProperty));
+        dpData.setValue(LocalDate.now());
         limparCampos();
     }
 
+    private void configurarComboBoxes() {
+        cbTurmas.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Turma turma, boolean empty) {
+                super.updateItem(turma, empty);
+                setText(empty ? null : turma.getNomeTurma());
+            }
+        });
+        cbTurmas.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Turma turma, boolean empty) {
+                super.updateItem(turma, empty);
+                setText(empty ? null : turma.getNomeTurma());
+            }
+        });
+
+        cbDisciplinas.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Disciplina disciplina, boolean empty) {
+                super.updateItem(disciplina, empty);
+                setText(empty ? null : disciplina.getNomeDisciplina());
+            }
+        });
+        cbDisciplinas.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Disciplina disciplina, boolean empty) {
+                super.updateItem(disciplina, empty);
+                setText(empty ? null : disciplina.getNomeDisciplina());
+            }
+        });
+    }
     @FXML
     private void carregarAlunosDaTurma() {
         Turma turmaSelecionada = cbTurmas.getValue();
@@ -53,7 +84,6 @@ public class PainelFrequenciaController {
             listAlunos.getItems().clear();
         }
     }
-
     @FXML
     private void salvarFrequencia() {
         try {
@@ -71,7 +101,6 @@ public class PainelFrequenciaController {
             showAlert(Alert.AlertType.ERROR, "Erro", e.getMessage());
         }
     }
-
     @FXML
     private void limparCampos() {
         cbTurmas.getSelectionModel().clearSelection();
@@ -79,7 +108,6 @@ public class PainelFrequenciaController {
         dpData.setValue(LocalDate.now());
         listAlunos.getItems().clear();
     }
-
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

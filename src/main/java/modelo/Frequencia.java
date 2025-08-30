@@ -8,6 +8,7 @@ import java.time.LocalDate;
  */
 public class Frequencia {
 
+    private int id;
     private Aluno aluno;
     private Disciplina disciplina;
     private LocalDate data;
@@ -21,6 +22,12 @@ public class Frequencia {
     }
 
     // Getters e Setters
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
     public Aluno getAluno() { return aluno; }
     public void setAluno(Aluno aluno) { this.aluno = aluno; }
     public Disciplina getDisciplina() { return disciplina; }

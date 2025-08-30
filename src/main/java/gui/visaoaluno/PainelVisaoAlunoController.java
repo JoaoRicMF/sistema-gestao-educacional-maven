@@ -11,9 +11,16 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import modelo.*;
+import service.FrequenciaService;
 import service.MuralService;
+import service.NotaService;
+
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class PainelVisaoAlunoController {
 
@@ -21,40 +28,116 @@ public class PainelVisaoAlunoController {
     @FXML private ListView<BoletimDisciplina> listNotas;
     @FXML private ListView<Turma> listTurmas;
     @FXML private ListView<Mural> listMural;
-    @FXML private TextField txtNome;
-    @FXML private TextField txtMatricula;
-    @FXML private TextField txtCurso;
-    @FXML private TextField txtEmail;
+    @FXML private TextField txtNome, txtMatricula, txtCurso, txtEmail;
 
     private Aluno alunoLogado;
-    private Turma turmaDoAluno;
     private MuralService muralService;
+    private List<Turma> todasAsTurmas;
+    private NotaService notaService;
+    private FrequenciaService frequenciaService;
 
-    public void setAluno(Aluno aluno, Turma turma) {
+    public void setAluno(Aluno aluno, List<Turma> todasAsTurmas) {
         this.alunoLogado = aluno;
-        this.turmaDoAluno = turma;
+        this.todasAsTurmas = todasAsTurmas;
         atualizarDados();
     }
-    public void setMuralService(MuralService muralService) { this.muralService = muralService; }
+    public void setMuralService(MuralService muralService) {
+        this.muralService = muralService;
+    }
+    public void setNotaService(NotaService notaService) {
+        this.notaService = notaService;
+    }
+    public void setFrequenciaService(FrequenciaService frequenciaService) {
+        this.frequenciaService = frequenciaService;
+    }
 
     @FXML
     public void initialize() {
-        // --- Configuração das Listas ---
+        configurarListViews();
+        listTurmas.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Turma turmaSelecionada = listTurmas.getSelectionModel().getSelectedItem();
+                if (turmaSelecionada != null) abrirDetalhesTurma(turmaSelecionada);
+            }
+        });
+        listNotas.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                BoletimDisciplina boletim = listNotas.getSelectionModel().getSelectedItem();
+                if (boletim != null) abrirDetalhesDisciplina(boletim);
+            }
+        });
+    }
+
+    private void atualizarDados() {
+        if (alunoLogado == null) return;
+
+        lblBoasVindas.setText("Bem-vindo(a), " + alunoLogado.getNome() + "!");
+        txtNome.setText(alunoLogado.getNome());
+        txtMatricula.setText(alunoLogado.getMatricula());
+        txtCurso.setText(alunoLogado.getCurso());
+        txtEmail.setText(alunoLogado.getEmail());
+
+        Optional<Turma> turmaDoAlunoOpt = todasAsTurmas.stream()
+                .filter(turma -> turma.getAlunos().stream()
+                        .anyMatch(aluno -> aluno.getMatricula().equals(alunoLogado.getMatricula())))
+                .findFirst();
+
+        if (turmaDoAlunoOpt.isPresent()) {
+            Turma turmaDoAluno = turmaDoAlunoOpt.get();
+            listTurmas.getItems().setAll(turmaDoAluno);
+
+            if (muralService != null) {
+                listMural.getItems().setAll(muralService.verPostagensDaTurma(turmaDoAluno));
+            }
+
+            if (notaService != null && frequenciaService != null) {
+                List<BoletimDisciplina> boletimCompleto = new ArrayList<>();
+                List<Nota> todasAsNotasDoAluno = notaService.buscarNotasDoAluno(alunoLogado);
+
+                for (Disciplina disciplina : turmaDoAluno.getDisciplinas()) {
+
+                    List<Nota> notasDaDisciplina = todasAsNotasDoAluno.stream()
+                            .filter(n -> n.getDisciplina().getId() == disciplina.getId())
+                            .collect(Collectors.toList());
+
+                    double n1 = notasDaDisciplina.stream().findFirst().map(Nota::getValor).orElse(0.0);
+                    double n2 = notasDaDisciplina.stream().skip(1).findFirst().map(Nota::getValor).orElse(0.0);
+                    double media = notasDaDisciplina.isEmpty() ? 0.0 : notasDaDisciplina.stream().mapToDouble(Nota::getValor).average().orElse(0.0);
+
+                    int[] dadosFrequencia = frequenciaService.consultarFaltasEPresencas(alunoLogado, disciplina);
+                    int totalAulas = dadosFrequencia[0];
+                    int presencas = dadosFrequencia[1];
+                    int faltas = totalAulas - presencas;
+
+                    String status = notaService.verificarStatusAprovacao(media);
+
+                    BoletimDisciplina boletimDisciplina = new BoletimDisciplina(disciplina, n1, n2, media, totalAulas, faltas, status);
+                    boletimCompleto.add(boletimDisciplina);
+                }
+
+                listNotas.getItems().setAll(boletimCompleto);
+            }
+        }
+    }
+
+    private void configurarListViews() {
         listMural.setCellFactory(lv -> new ListCell<>() {
+            @Override
             protected void updateItem(Mural item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
                 } else {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                    setText(String.format("[%s] %s: %s",
+                    setText(String.format("[%s por %s] %s\n%s",
                             item.getDataPostagem().format(formatter),
+                            item.getAutor().getNome(),
                             item.getTitulo(),
                             item.getConteudo()));
+                    setWrapText(true);
                 }
             }
         });
-
         listTurmas.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Turma turma, boolean empty) {
@@ -62,7 +145,6 @@ public class PainelVisaoAlunoController {
                 setText(empty ? null : turma.getNomeTurma() + " - " + turma.getSemestre() + "º Semestre - " + turma.getTurno());
             }
         });
-
         listNotas.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(BoletimDisciplina item, boolean empty) {
@@ -70,58 +152,6 @@ public class PainelVisaoAlunoController {
                 setText(empty ? null : item.getDisciplina().getNomeDisciplina() + " - Média: " + String.format("%.2f", item.getMediaFinal()));
             }
         });
-
-        // --- Configuração dos cliques ---
-        listTurmas.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                Turma turmaSelecionada = listTurmas.getSelectionModel().getSelectedItem();
-                if (turmaSelecionada != null) {
-                    abrirDetalhesTurma(turmaSelecionada);
-                }
-            }
-        });
-
-        listNotas.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                BoletimDisciplina boletim = listNotas.getSelectionModel().getSelectedItem();
-                if (boletim != null) {
-                    abrirDetalhesDisciplina(boletim);
-                }
-            }
-        });
-    }
-
-    private void atualizarDados() {
-        if (alunoLogado != null) {
-            lblBoasVindas.setText("Bem-vindo(a), " + alunoLogado.getNome() + "!");
-            txtNome.setText(alunoLogado.getNome());
-            txtMatricula.setText(alunoLogado.getMatricula());
-            txtCurso.setText(alunoLogado.getCurso());
-            txtEmail.setText(alunoLogado.getEmail());
-
-            if(turmaDoAluno != null) {
-                // Preenche a lista de turmas
-                listTurmas.getItems().add(turmaDoAluno);
-
-                // Preenche o mural
-                if(muralService != null) {
-                    listMural.getItems().setAll(muralService.verPostagensDaTurma(turmaDoAluno));
-                }
-
-                // Preenche as notas com base nas disciplinas da turma
-                if (!turmaDoAluno.getDisciplinas().isEmpty()) {
-                    Disciplina d1 = turmaDoAluno.getDisciplinas().get(0);
-                    BoletimDisciplina b1 = new BoletimDisciplina(d1, 9.0, 10.0, 9.5, 40, 1, "APROVADO");
-                    listNotas.getItems().add(b1);
-
-                    if (turmaDoAluno.getDisciplinas().size() > 1) {
-                        Disciplina d2 = turmaDoAluno.getDisciplinas().get(1);
-                        BoletimDisciplina b2 = new BoletimDisciplina(d2, 7.5, 8.5, 8.0, 30, 2, "APROVADO");
-                        listNotas.getItems().add(b2);
-                    }
-                }
-            }
-        }
     }
 
     private void abrirDetalhesTurma(Turma turma) {

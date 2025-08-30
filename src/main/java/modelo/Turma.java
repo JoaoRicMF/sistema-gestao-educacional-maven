@@ -9,6 +9,7 @@ import java.util.List;
  */
 
 public class Turma {
+    private int id;
     private String nomeTurma;
     private int semestre;
     private Turno turno;
@@ -39,6 +40,12 @@ public class Turma {
         for(Disciplina disciplina : disciplinas){
             System.out.println(disciplina.getNomeDisciplina());
         }
+    }
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
     public String getNomeTurma() {
         return nomeTurma;
@@ -72,5 +79,9 @@ public class Turma {
     }
     public void removerAluno(Aluno aluno){
         alunos.remove(aluno);
+    }
+    @Override
+    public String toString() {
+        return this.getNomeTurma();
     }
 }

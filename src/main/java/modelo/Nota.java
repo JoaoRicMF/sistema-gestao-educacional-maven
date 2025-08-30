@@ -8,9 +8,9 @@ import java.time.LocalDate;
  */
 
 public class Nota {
+    private int id;
     private Aluno aluno;
     private Disciplina disciplina;
-
     private double valor;
     private TipoAvaliacao tipoAvaliacao; //enum
     private LocalDate data; // data da Prova
@@ -23,42 +23,39 @@ public class Nota {
         this.data = data;
     }
 
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
     public Aluno getAluno() {
         return aluno;
     }
-
     public void setAluno(Aluno aluno) {
         this.aluno = aluno;
     }
-
     public Disciplina getDisciplina() {
         return disciplina;
     }
-
     public void setDisciplina(Disciplina disciplina) {
         this.disciplina = disciplina;
     }
-
     public double getValor() {
         return valor;
     }
-
     public void setValor(double valor) {
         this.valor = valor;
     }
-
     public TipoAvaliacao getTipoAvaliacao() {
         return tipoAvaliacao;
     }
-
     public void setTipoAvaliacao(TipoAvaliacao tipoAvaliacao) {
         this.tipoAvaliacao = tipoAvaliacao;
     }
-
     public LocalDate getData() {
         return data;
     }
-
     public void setData(LocalDate data) {
         this.data = data;
     }

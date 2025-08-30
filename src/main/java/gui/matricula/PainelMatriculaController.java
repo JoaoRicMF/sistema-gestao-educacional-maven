@@ -5,16 +5,17 @@ import gui.util.Validacoes;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import modelo.Aluno;
 import modelo.Turma;
 import service.MatriculaService;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import javafx.scene.control.ListCell;
 
 public class PainelMatriculaController {
 
@@ -47,7 +48,11 @@ public class PainelMatriculaController {
     @FXML
     public void initialize() {
         Validacoes.addRequiredFieldValidator(txtDataMatricula);
+        configurarComboBoxes();
+        limparCampos();
+    }
 
+    private void configurarComboBoxes() {
         cbAlunos.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Aluno aluno, boolean empty) {
@@ -62,7 +67,6 @@ public class PainelMatriculaController {
                 setText(empty ? null : aluno.getNome());
             }
         });
-
         cbTurmas.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Turma turma, boolean empty) {
@@ -77,7 +81,6 @@ public class PainelMatriculaController {
                 setText(empty ? null : turma.getNomeTurma());
             }
         });
-        limparCampos();
     }
 
     @FXML
@@ -90,7 +93,6 @@ public class PainelMatriculaController {
             if (alunoSelecionado == null || turmaSelecionada == null || dataMatriculaStr.isEmpty()) {
                 throw new ValidacaoExcecoes("Por favor, selecione um aluno, uma turma e preencha a data.");
             }
-
             LocalDate.parse(dataMatriculaStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
             if (matriculaService != null) {
@@ -101,10 +103,10 @@ public class PainelMatriculaController {
             limparCampos();
 
         } catch (ValidacaoExcecoes e) {
-            showAlert(Alert.AlertType.ERROR, "Erro de Validação", "Erro ao matricular: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Erro de Validação", e.getMessage());
         } catch (DateTimeParseException e) {
             showAlert(Alert.AlertType.ERROR, "Erro de Formato", "A data da matrícula deve estar no formato dd/MM/yyyy.");
-        } catch (Exception e) {
+        } catch (Exception e) { // **CORREÇÃO**: O bloco catch para SQLException foi removido.
             showAlert(Alert.AlertType.ERROR, "Erro", "Ocorreu um erro inesperado: " + e.getMessage());
             e.printStackTrace();
         }
@@ -114,7 +116,7 @@ public class PainelMatriculaController {
     private void limparCampos() {
         cbAlunos.getSelectionModel().clearSelection();
         cbTurmas.getSelectionModel().clearSelection();
-        txtDataMatricula.clear();
+        txtDataMatricula.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {

@@ -90,4 +90,8 @@ public class Aluno extends Pessoa {
     public final BooleanProperty presenteProperty() { return this.presente; }
     public final boolean isPresente() { return this.presenteProperty().get(); }
     public final void setPresente(final boolean presente) { this.presenteProperty().set(presente); }
+    @Override
+    public String toString() {
+        return this.getNome();
+    }
 }

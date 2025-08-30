@@ -50,6 +50,8 @@ public class PainelAlunoController {
         Mask.addDateMask(txtDataNascimento);
         Mask.addPhoneMask(txtTelefone);
         Mask.addCEPMask(txtCEP);
+        Mask.addMatriculaMask(txtMatricula);
+        Mask.addSemestreMask(txtSemestre);
 
         Validacoes.addRequiredFieldValidator(txtNome);
         Validacoes.addRequiredFieldValidator(txtCPF);
@@ -97,6 +99,23 @@ public class PainelAlunoController {
             Endereco endereco = new Endereco(rua, numero, complemento, bairro, cidade, uf, cep);
 
             if (alunoCarregado != null) {
+                // Atualiza o objeto 'alunoCarregado' com os novos dados do formulário
+                alunoCarregado.setNome(nome);
+                alunoCarregado.setCpf(cpf);
+                alunoCarregado.setRG(rg);
+                alunoCarregado.setGenero(genero);
+                alunoCarregado.setDataNascimento(dataNascimento);
+                alunoCarregado.setTelefone(telefone);
+                alunoCarregado.setEmail(email);
+                alunoCarregado.setEndereco(endereco);
+
+                alunoCarregado.setMatricula(matricula);
+                alunoCarregado.setCurso(curso);
+                alunoCarregado.setTipoCurso(tipoCurso);
+                alunoCarregado.setSemestre(Integer.parseInt(semestreStr));
+                alunoCarregado.setNivelAcademico(nivelAcademico);
+                alunoCarregado.setStatusAluno(statusAluno);
+
                 alunoService.atualizarDadosAluno(alunoCarregado, telefone, email, endereco);
                 showAlert(AlertType.INFORMATION, "Sucesso", "Dados do aluno '" + alunoCarregado.getNome() + "' atualizados com sucesso! ✅");
             } else {
@@ -167,7 +186,7 @@ public class PainelAlunoController {
             return;
         }
         try {
-            alunoService.excluirAluno(alunoCarregado);
+            alunoService.desativarAluno(alunoCarregado);
             cbStatusAluno.setValue(StatusAluno.INATIVO);
             showAlert(AlertType.INFORMATION, "Sucesso", "Aluno '" + alunoCarregado.getNome() + "' desativado com sucesso.");
         } catch (ValidacaoExcecoes e) {

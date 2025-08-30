@@ -3,9 +3,11 @@ package main;
 import database.TesteConexao;
 import gui.PrincipalFX;
 
+import java.sql.SQLException;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         //Teste banco de dados
         TesteConexao teste = new TesteConexao();
         teste.testarBDB();

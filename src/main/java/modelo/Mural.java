@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
  */
 
 public class Mural {
+    private int id;
     private String titulo;
     private String conteudo;
     private Professor autor;
@@ -23,6 +24,12 @@ public class Mural {
     }
 
     // Getters
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getTitulo() { return titulo; }
     public String getConteudo() { return conteudo; }
     public Professor getAutor() { return autor; }

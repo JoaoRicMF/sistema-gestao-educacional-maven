@@ -4,18 +4,14 @@ import excecoes.ValidacaoExcecoes;
 import modelo.Mural;
 import modelo.Professor;
 import modelo.Turma;
+import dao.MuralDAO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-/**
- *
- * @author João Ricardo
- */
 public class MuralService {
-    // Simula um "banco de dados" para as postagens do mural
-    private final List<Mural> postagens = new ArrayList<>();
+
+    private final MuralDAO muralDAO = new MuralDAO();
 
     public void postarNoMural(String titulo, String conteudo, Professor autor, Turma turma) throws ValidacaoExcecoes {
         if (titulo == null || titulo.trim().isEmpty()) {
@@ -29,17 +25,17 @@ public class MuralService {
         }
 
         Mural novaPostagem = new Mural(titulo, conteudo, autor, turma, LocalDateTime.now());
-        postagens.add(novaPostagem);
-        System.out.println("LOG: Nova postagem no mural para a turma " + turma.getNomeTurma());
+
+        // Salva a postagem no banco de dados
+        muralDAO.salvar(novaPostagem);
+
+        System.out.println("LOG: Nova postagem salva no banco para a turma " + turma.getNomeTurma());
     }
 
     public List<Mural> verPostagensDaTurma(Turma turma) {
         if (turma == null) {
             return new ArrayList<>();
         }
-        return postagens.stream()
-                .filter(p -> p.getTurmaDestino().equals(turma))
-                .sorted((p1, p2) -> p2.getDataPostagem().compareTo(p1.getDataPostagem())) // Ordena do mais novo para o mais antigo
-                .collect(Collectors.toList());
+        return muralDAO.listarPorTurma(turma);
     }
 }

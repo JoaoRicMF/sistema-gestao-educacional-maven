@@ -9,6 +9,7 @@ import java.util.List;
  */
 
 public class Disciplina {
+    private int id;
     private String nomeDisciplina;
     private int cargaHoraria;
     private int serieSemestre; // Adicionado
@@ -21,6 +22,12 @@ public class Disciplina {
         this.preRequisitos = new ArrayList<>();
     }
 
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getNomeDisciplina() {
         return nomeDisciplina;
     }
@@ -33,20 +40,20 @@ public class Disciplina {
     public void setCargaHoraria(int cargaHoraria) {
         this.cargaHoraria = cargaHoraria;
     }
-
-    // Getter e Setter para o novo atributo
     public int getSerieSemestre() {
         return serieSemestre;
     }
-
     public void setSerieSemestre(int serieSemestre) {
         this.serieSemestre = serieSemestre;
     }
-
     public List<Disciplina> getPreRequisitos() {
         return preRequisitos;
     }
     public void adicionarPreRequisito(Disciplina disciplina) {
         this.preRequisitos.add(disciplina);
+    }
+    @Override
+    public String toString() {
+        return this.getNomeDisciplina();
     }
 }

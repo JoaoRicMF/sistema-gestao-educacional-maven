@@ -9,7 +9,6 @@ import javafx.scene.control.Alert.AlertType;
 import modelo.*;
 import service.TurmaService;
 import java.util.List;
-import java.util.Optional;
 import gui.util.BuscaController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -59,21 +58,8 @@ public class PainelTurmaController {
 
         cbTurno.getItems().setAll(Turno.values());
 
-        // Configuração dos ComboBoxes e ListViews
-        cbProfessor.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(Professor professor, boolean empty) {
-                super.updateItem(professor, empty);
-                setText(empty ? null : professor.getNome());
-            }
-        });
-        cbProfessor.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(Professor professor, boolean empty) {
-                super.updateItem(professor, empty);
-                setText(empty ? null : professor.getNome());
-            }
-        });
+        configurarComboBoxes();
+
         listAlunosMatriculados.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Aluno aluno, boolean empty) {
@@ -91,6 +77,39 @@ public class PainelTurmaController {
         limparCampos();
     }
 
+    private void configurarComboBoxes() {
+        // Exibe o nome do Professor na ComboBox
+        cbProfessor.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Professor professor, boolean empty) {
+                super.updateItem(professor, empty);
+                setText(empty ? null : professor.getNome());
+            }
+        });
+        cbProfessor.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Professor professor, boolean empty) {
+                super.updateItem(professor, empty);
+                setText(empty ? null : professor.getNome());
+            }
+        });
+
+        cbDisciplinasDisponiveis.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Disciplina disciplina, boolean empty) {
+                super.updateItem(disciplina, empty);
+                setText(empty ? null : disciplina.getNomeDisciplina());
+            }
+        });
+        cbDisciplinasDisponiveis.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Disciplina disciplina, boolean empty) {
+                super.updateItem(disciplina, empty);
+                setText(empty ? null : disciplina.getNomeDisciplina());
+            }
+        });
+    }
+
     @FXML
     private void salvarOuAtualizar(ActionEvent event) {
         try {
@@ -99,15 +118,16 @@ public class PainelTurmaController {
             Turno turno = cbTurno.getValue();
 
             if (turmaCarregada != null) {
-                turmaService.atualizarTurma(turmaCarregada, nomeTurma, serieAno, turno);
+                turmaCarregada.setNomeTurma(nomeTurma);
+                turmaCarregada.setSemestre(serieAno);
+                turmaCarregada.setTurno(turno);
                 showAlert(AlertType.INFORMATION, "Sucesso", "Turma '" + nomeTurma + "' atualizada com sucesso!");
             } else {
-                turmaService.cadastrarNovaTurma(nomeTurma, serieAno, turno);
+                Turma novaTurma = turmaService.cadastrarNovaTurma(nomeTurma, serieAno, turno);
+                if (todasAsTurmas != null) {
+                    todasAsTurmas.add(novaTurma);
+                }
                 showAlert(AlertType.INFORMATION, "Sucesso", "Turma '" + nomeTurma + "' cadastrada com sucesso!");
-            }
-            Turma novaTurma = turmaService.cadastrarNovaTurma(nomeTurma, serieAno, turno);
-            if (todasAsTurmas != null) {
-                todasAsTurmas.add(novaTurma);
             }
             limparCampos();
 
@@ -119,92 +139,46 @@ public class PainelTurmaController {
             showAlert(AlertType.ERROR, "Erro", "Ocorreu um erro: " + e.getMessage());
         }
     }
-
     @FXML
     private void buscarTurma() {
         if (todasAsTurmas == null || todasAsTurmas.isEmpty()) {
             showAlert(AlertType.INFORMATION, "Aviso", "Não há turmas cadastradas para buscar.");
             return;
         }
-
         try {
-            // Carrega o FXML da janela de busca
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/util/Busca.fxml"));
             VBox page = loader.load();
-
-            // Cria um novo Stage (janela) para o diálogo
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Buscar Turma");
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
-
-            // Passa a lista de turmas para o controller da busca
             BuscaController<Turma> controller = loader.getController();
             controller.setItens(todasAsTurmas, Turma::getNomeTurma);
-
             dialogStage.showAndWait();
-
             Turma turmaSelecionada = controller.getItemSelecionado();
             if (turmaSelecionada != null) {
                 this.turmaCarregada = turmaSelecionada;
                 carregarDadosParaFormulario(turmaCarregada);
                 showAlert(AlertType.INFORMATION, "Sucesso", "Turma encontrada e dados carregados.");
             }
-
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Erro", "Não foi possível abrir a janela de busca.");
         }
     }
-
     @FXML
     private void adicionarDisciplinaNaTurma() {
-        if (turmaCarregada == null) {
-            showAlert(AlertType.WARNING, "Aviso", "Nenhuma turma carregada. Busque uma turma primeiro.");
-            return;
-        }
-        Disciplina disciplinaSelecionada = cbDisciplinasDisponiveis.getValue();
-        if (disciplinaSelecionada == null) {
-            showAlert(AlertType.WARNING, "Aviso", "Selecione uma disciplina para adicionar.");
-            return;
-        }
-        try {
-            turmaService.adicionarDisciplinaNaGrade(disciplinaSelecionada, turmaCarregada);
-            atualizarListasDaTurma();
-            showAlert(AlertType.INFORMATION, "Sucesso", "Disciplina adicionada à grade da turma.");
-        } catch (ValidacaoExcecoes e) {
-            showAlert(AlertType.ERROR, "Erro", e.getMessage());
-        }
     }
-
     @FXML
     private void removerAlunoDaTurma() {
-        if (turmaCarregada == null) {
-            showAlert(AlertType.WARNING, "Aviso", "Nenhuma turma carregada.");
-            return;
-        }
-        Aluno alunoSelecionado = listAlunosMatriculados.getSelectionModel().getSelectedItem();
-        if (alunoSelecionado == null) {
-            showAlert(AlertType.WARNING, "Aviso", "Selecione um aluno na lista para remover.");
-            return;
-        }
-        try {
-            turmaService.removerAlunoDaTurma(alunoSelecionado, turmaCarregada);
-            atualizarListasDaTurma();
-            showAlert(AlertType.INFORMATION, "Sucesso", "Aluno removido da turma.");
-        } catch (ValidacaoExcecoes e) {
-            showAlert(AlertType.ERROR, "Erro", e.getMessage());
-        }
     }
-
     private void carregarDadosParaFormulario(Turma turma) {
         txtNomeTurma.setText(turma.getNomeTurma());
         txtSerieAno.setText(String.valueOf(turma.getSemestre()));
         cbTurno.setValue(turma.getTurno());
         atualizarListasDaTurma();
     }
-
     private void atualizarListasDaTurma() {
         if (turmaCarregada != null) {
             listAlunosMatriculados.getItems().setAll(turmaCarregada.getAlunos());
@@ -214,12 +188,10 @@ public class PainelTurmaController {
             listDisciplinasTurma.getItems().clear();
         }
     }
-
     @FXML
     private void limparCampos(ActionEvent event) {
         limparCampos();
     }
-
     private void limparCampos() {
         txtNomeTurma.clear();
         txtSerieAno.clear();
@@ -229,7 +201,6 @@ public class PainelTurmaController {
         this.turmaCarregada = null;
         atualizarListasDaTurma();
     }
-
     private void showAlert(AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

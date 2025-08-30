@@ -28,12 +28,8 @@ public class PainelProfessorController {
     @FXML private TextField txtNome, txtCPF, txtDataNascimento, txtMatricula, txtRG, txtTelefone, txtEmail;
     @FXML private ListView<Disciplina> listDisciplinas;
     @FXML private Button btnSalvar, btnCancelar, btnBuscarProfessor, btnExcluirProfessor;
-
-    // Campos de endereço
     @FXML private TextField txtRua, txtNumero, txtComplemento, txtBairro, txtCidade, txtCEP;
     @FXML private ComboBox<UF> cbUF;
-
-    // Campos de gênero adicionados
     @FXML private RadioButton rbMasculino, rbFeminino, rbOutro, rbNaoInformar;
     @FXML private ToggleGroup bgGenero;
 
@@ -41,29 +37,23 @@ public class PainelProfessorController {
     public void setProfessorService(ProfessorService professorService) {
         this.professorService = professorService;
     }
-
     public void setTodasAsDisciplinas(List<Disciplina> todasAsDisciplinas) {
         this.todasAsDisciplinas = todasAsDisciplinas;
     }
-
     public void setTodosOsProfessores(List<Professor> todosOsProfessores) {
         this.todosOsProfessores = todosOsProfessores;
     }
 
     @FXML
     public void initialize() {
-        if (this.professorService == null) {
-            this.professorService = new ProfessorService();
-        }
-
         cbUF.getItems().setAll(UF.values());
 
-        //Mascaras
         Mask.addCPFMask(txtCPF);
         Mask.addRGMask(txtRG);
         Mask.addDateMask(txtDataNascimento);
         Mask.addPhoneMask(txtTelefone);
         Mask.addCEPMask(txtCEP);
+        Mask.addMatriculaMask(txtMatricula);
 
         Validacoes.addRequiredFieldValidator(txtNome);
         Validacoes.addRequiredFieldValidator(txtCPF);
@@ -77,7 +67,6 @@ public class PainelProfessorController {
         Validacoes.addRequiredFieldValidator(txtBairro);
         Validacoes.addRequiredFieldValidator(txtCidade);
         Validacoes.addRequiredFieldValidator(txtCEP);
-
         atualizarListaDisciplinasGUI();
         limparCampos();
     }
@@ -93,9 +82,8 @@ public class PainelProfessorController {
             String telefone = txtTelefone.getText();
             String email = txtEmail.getText();
             List<Disciplina> disciplinasSelecionadas = listDisciplinas.getSelectionModel().getSelectedItems();
-            Genero genero = getGeneroSelecionado(); // Pega o gênero selecionado
+            Genero genero = getGeneroSelecionado();
 
-            // Coleta dos dados de endereço
             String rua = txtRua.getText();
             String numero = txtNumero.getText();
             String complemento = txtComplemento.getText();
@@ -106,20 +94,26 @@ public class PainelProfessorController {
             Endereco endereco = new Endereco(rua, numero, complemento, bairro, cidade, uf, cep);
 
             if (professorCarregado != null) {
-                // Atualiza o objeto professor carregado
+                // ATUALIZA O OBJETO ANTES DE ENVIAR PARA O SERVICE
                 professorCarregado.setNome(nome);
                 professorCarregado.setCpf(cpf);
                 professorCarregado.setDataNascimento(dataNascimento);
                 professorCarregado.setRG(rg);
                 professorCarregado.setMatricula(matricula);
-                professorCarregado.setGenero(genero); // Atualiza o gênero
+                professorCarregado.setGenero(genero);
+                professorCarregado.setTelefone(telefone);
+                professorCarregado.setEmail(email);
+                professorCarregado.setEndereco(endereco);
+                professorCarregado.setDisciplinas(disciplinasSelecionadas);
 
-                // Chama o serviço para atualizar
-                professorService.atualizarDadosProfessor(professorCarregado, telefone, email, endereco, disciplinasSelecionadas);
+                // CORREÇÃO: Chama o método com a assinatura correta
+                professorService.atualizarDadosProfessor(professorCarregado);
                 showAlert(AlertType.INFORMATION, "Sucesso", "Dados do professor '" + professorCarregado.getNome() + "' atualizados com sucesso! ✅");
             } else {
-                // A criação do professor agora é delegada ao service
-                Professor novoProfessor = professorService.cadastrarNovoProfessor(nome, cpf, rg, genero, dataNascimento, telefone, email, matricula, endereco, disciplinasSelecionadas);
+                Professor novoProfessor = new Professor(nome, cpf, rg, genero, dataNascimento, telefone, email, endereco, matricula);
+                novoProfessor.setDisciplinas(disciplinasSelecionadas);
+
+                professorService.cadastrarNovoProfessor(novoProfessor);
                 todosOsProfessores.add(novoProfessor);
                 showAlert(AlertType.INFORMATION, "Sucesso", "Professor '" + nome + "' cadastrado com sucesso! ✅");
             }
@@ -129,15 +123,14 @@ public class PainelProfessorController {
         }
     }
 
-    // Metodo para obter o gênero selecionado dos RadioButtons
+    // O restante da classe (buscar, limpar, etc.) permanece o mesmo...
     private Genero getGeneroSelecionado() {
         if (rbMasculino.isSelected()) return Genero.MASCULINO;
         if (rbFeminino.isSelected()) return Genero.FEMININO;
         if (rbOutro.isSelected()) return Genero.OUTRO;
         if (rbNaoInformar.isSelected()) return Genero.NAO_INFORMAR;
-        return null; // ou Genero.NAO_INFORMAR como padrão
+        return null;
     }
-
     private void carregarDadosParaFormulario(Professor prof) {
         txtNome.setText(prof.getNome());
         txtCPF.setText(prof.getCpf());
@@ -146,8 +139,6 @@ public class PainelProfessorController {
         txtRG.setText(prof.getRG());
         txtTelefone.setText(prof.getTelefone());
         txtEmail.setText(prof.getEmail());
-
-        // Carrega o gênero
         if (prof.getGenero() != null) {
             switch (prof.getGenero()) {
                 case MASCULINO: rbMasculino.setSelected(true); break;
@@ -160,8 +151,6 @@ public class PainelProfessorController {
                 bgGenero.getSelectedToggle().setSelected(false);
             }
         }
-
-        // Carrega os dados de endereço
         Endereco end = prof.getEndereco();
         if (end != null) {
             txtRua.setText(end.getRua());
@@ -172,7 +161,6 @@ public class PainelProfessorController {
             txtCEP.setText(end.getCep());
             cbUF.setValue(end.getUf());
         }
-
         listDisciplinas.getSelectionModel().clearSelection();
         if (prof.getDisciplinas() != null && !prof.getDisciplinas().isEmpty()) {
             listDisciplinas.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -181,7 +169,6 @@ public class PainelProfessorController {
             }
         }
     }
-
     @FXML
     private void limparCampos() {
         txtNome.clear();
@@ -191,13 +178,9 @@ public class PainelProfessorController {
         txtRG.clear();
         txtTelefone.clear();
         txtEmail.clear();
-
-        // Limpa a seleção de gênero
         if (bgGenero.getSelectedToggle() != null) {
             bgGenero.getSelectedToggle().setSelected(false);
         }
-
-        // Limpa os campos de endereço
         txtRua.clear();
         txtNumero.clear();
         txtComplemento.clear();
@@ -205,19 +188,15 @@ public class PainelProfessorController {
         txtCidade.clear();
         txtCEP.clear();
         cbUF.getSelectionModel().clearSelection();
-
         listDisciplinas.getSelectionModel().clearSelection();
         this.professorCarregado = null;
     }
-
-    // ... (O restante da classe (buscar, excluir, etc.) permanece o mesmo)
     @FXML
     private void buscarEPreencher() {
         if (todosOsProfessores == null || todosOsProfessores.isEmpty()) {
             showAlert(AlertType.INFORMATION, "Aviso", "Não há professores cadastrados para buscar.");
             return;
         }
-
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/util/Busca.fxml"));
             VBox page = (VBox) loader.load();
@@ -225,54 +204,42 @@ public class PainelProfessorController {
             dialogStage.setTitle("Buscar Professor");
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setScene(new Scene(page));
-
             BuscaController<Professor> controller = loader.getController();
             controller.setItens(todosOsProfessores, prof -> prof.getNome() + " - Matrícula: " + prof.getMatricula());
-
             dialogStage.showAndWait();
-
             Professor professorSelecionado = controller.getItemSelecionado();
             if (professorSelecionado != null) {
-                Optional<Professor> professorCompletoOpt = professorService.buscarProfessorPorMatricula(professorSelecionado.getMatricula(), todasAsDisciplinas);
-                if(professorCompletoOpt.isPresent()){
-                    this.professorCarregado = professorCompletoOpt.get();
-                    carregarDadosParaFormulario(professorCarregado);
-                    showAlert(AlertType.INFORMATION, "Sucesso", "Professor encontrado e dados carregados.");
-                } else {
-                    showAlert(AlertType.ERROR, "Erro", "Erro ao carregar dados completos do professor.");
-                }
+                this.professorCarregado = professorSelecionado;
+                carregarDadosParaFormulario(professorCarregado);
+                showAlert(AlertType.INFORMATION, "Sucesso", "Professor encontrado e dados carregados.");
             }
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Erro", "Não foi possível abrir a janela de busca.");
         }
     }
-
     @FXML
     private void excluir() {
         if (professorCarregado == null) {
             showAlert(AlertType.WARNING, "Aviso", "Nenhum professor carregado. Busque um primeiro.");
             return;
         }
-
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Confirmação");
         alert.setHeaderText(null);
         alert.setContentText("Tem certeza que deseja excluir o professor '" + professorCarregado.getNome() + "'?");
-
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
                 professorService.excluirProfessor(professorCarregado);
                 todosOsProfessores.remove(professorCarregado);
-                showAlert(AlertType.INFORMATION, "Sucesso", "Professor excluído com sucesso (simulado).");
+                showAlert(AlertType.INFORMATION, "Sucesso", "Professor excluído com sucesso.");
                 limparCampos();
             } catch (ValidacaoExcecoes e) {
                 showAlert(AlertType.ERROR, "Erro de Validação", "Erro: " + e.getMessage());
             }
         }
     }
-
     public void atualizarListaDisciplinasGUI() {
         if (todasAsDisciplinas != null) {
             listDisciplinas.getItems().setAll(todasAsDisciplinas);
@@ -285,7 +252,6 @@ public class PainelProfessorController {
             });
         }
     }
-
     private void showAlert(AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

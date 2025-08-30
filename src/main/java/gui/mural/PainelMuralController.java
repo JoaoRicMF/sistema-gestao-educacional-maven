@@ -8,12 +8,8 @@ import modelo.Turma;
 import service.MuralService;
 import java.util.List;
 
-/**
- *
- * @author João Ricardo
- */
 public class PainelMuralController {
-    private MuralService muralService;
+    private final MuralService muralService = new MuralService();
     private List<Turma> todasAsTurmas;
     private List<Professor> todosOsProfessores;
 
@@ -21,15 +17,32 @@ public class PainelMuralController {
     @FXML private TextField txtTitulo;
     @FXML private TextArea txtConteudo;
 
-    public void setMuralService(MuralService muralService) { this.muralService = muralService; }
-    public void setTodasAsTurmas(List<Turma> todasAsTurmas) { this.todasAsTurmas = todasAsTurmas; }
-    public void setTodosOsProfessores(List<Professor> todosOsProfessores) { this.todosOsProfessores = todosOsProfessores; }
+    public void setTodasAsTurmas(List<Turma> todasAsTurmas) {
+        this.todasAsTurmas = todasAsTurmas;
+        if (cbTurmas != null) {
+            cbTurmas.getItems().setAll(this.todasAsTurmas);
+        }
+    }
+    public void setTodosOsProfessores(List<Professor> todosOsProfessores) {
+        this.todosOsProfessores = todosOsProfessores;
+    }
 
     @FXML
     public void initialize() {
-        if (todasAsTurmas != null) {
-            cbTurmas.getItems().setAll(todasAsTurmas);
-        }
+        cbTurmas.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Turma turma, boolean empty) {
+                super.updateItem(turma, empty);
+                setText(empty ? null : turma.getNomeTurma());
+            }
+        });
+        cbTurmas.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Turma turma, boolean empty) {
+                super.updateItem(turma, empty);
+                setText(empty ? null : turma.getNomeTurma());
+            }
+        });
     }
 
     @FXML
@@ -38,8 +51,6 @@ public class PainelMuralController {
             Turma turma = cbTurmas.getValue();
             String titulo = txtTitulo.getText();
             String conteudo = txtConteudo.getText();
-
-            // Simula o professor logado (pega o primeiro da lista)
             Professor autor = (todosOsProfessores != null && !todosOsProfessores.isEmpty()) ? todosOsProfessores.get(0) : null;
 
             muralService.postarNoMural(titulo, conteudo, autor, turma);
@@ -50,6 +61,7 @@ public class PainelMuralController {
             showAlert(Alert.AlertType.ERROR, "Erro de Validação", e.getMessage());
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erro", "Ocorreu um erro ao enviar o aviso.");
+            e.printStackTrace();
         }
     }
 
