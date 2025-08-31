@@ -3,7 +3,13 @@ package modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author João Ricardo
+ */
+
 public class Turma {
+    //Atributos
     private int id;
     private String nomeTurma;
     private int semestre;
@@ -12,6 +18,7 @@ public class Turma {
     private List<Aluno> alunos;
     private List<Disciplina> disciplinas;
 
+    //Construtor
     public Turma(String nomeTurma, int semestre, Turno turno) {
         this.nomeTurma = nomeTurma;
         this.semestre = semestre;
@@ -20,31 +27,12 @@ public class Turma {
         this.disciplinas = new ArrayList<>();
     }
 
+    // Getters e Setters
     public Professor getProfessor() {
         return professor;
     }
-
     public void setProfessor(Professor professor) {
         this.professor = professor;
-    }
-
-    public void adicionarAluno(Aluno aluno){
-        alunos.add(aluno);
-    }
-    public void adicionarDisciplina(Disciplina disciplina){
-        disciplinas.add(disciplina);
-    }
-    public void listarAlunos(){
-        System.out.println("Alunos da turma " + nomeTurma + ":\n ");
-        for(Aluno aluno : alunos){
-            System.out.println(aluno.getNome());
-        }
-    }
-    public void listarDisciplinas(){
-        System.out.println("Disciplinas da turma " + nomeTurma + ":\n");
-        for(Disciplina disciplina : disciplinas){
-            System.out.println(disciplina.getNomeDisciplina());
-        }
     }
     public int getId() {
         return id;
@@ -84,6 +72,24 @@ public class Turma {
     }
     public void removerAluno(Aluno aluno){
         alunos.remove(aluno);
+    }
+    public void adicionarAluno(Aluno aluno){
+        alunos.add(aluno);
+    }
+    public void adicionarDisciplina(Disciplina disciplina){
+        disciplinas.add(disciplina);
+    }
+    public void listarAlunos(){
+        System.out.println("Alunos da turma " + nomeTurma + ":\n ");
+        for(Aluno aluno : alunos){
+            System.out.println(aluno.getNome());
+        }
+    }
+    public void listarDisciplinas(){
+        System.out.println("Disciplinas da turma " + nomeTurma + ":\n");
+        for(Disciplina disciplina : disciplinas){
+            System.out.println(disciplina.getNomeDisciplina());
+        }
     }
     @Override
     public String toString() {

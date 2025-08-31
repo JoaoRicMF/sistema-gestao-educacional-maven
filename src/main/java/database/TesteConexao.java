@@ -5,8 +5,9 @@ import java.sql.SQLException;
 
 /**
  *
- * @author João Ricardo
+ * @author Rhwan
  */
+
 public class TesteConexao {
     public void testarBDB() throws SQLException {
         // Tenta obter uma conexão do banco de dados

@@ -1,3 +1,8 @@
+/**
+ *
+ * @author Josemar
+ */
+
 /*TEMA ESCURO Estilo Principal para o Tema Escuro*/
 
 /*ESTILOS GERAIS E GLOBAIS*/
@@ -7,7 +12,6 @@
     -fx-font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* Define a fonte especial para ícones. */
 .icon, .icon-text {
     -fx-font-family: "Segoe UI Symbol";
 }
@@ -90,18 +94,18 @@
 
 /* Estilo para os painéis com título (ex: "Dados Pessoais"). */
 .titled-pane {
-    -fx-background-color: #2c2c2c; /* Cor de fundo um pouco mais clara que o root */
+    -fx-background-color: #2c2c2c;
     -fx-border-color: #444;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
 }
 
 .titled-pane > .title {
-    -fx-background-color: #373737; /* Título com um fundo ligeiramente diferente */
+    -fx-background-color: #373737;
     -fx-border-width: 0 0 1 0;
     -fx-border-color: #444;
     -fx-padding: 10 15;
-    -fx-background-radius: 8 8 0 0; /* Arredonda cantos superiores */
+    -fx-background-radius: 8 8 0 0;
 }
 
 .titled-pane .title .text {
@@ -169,7 +173,7 @@
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 6;
-    -fx-padding: 10px 20px; /* Ajustado para corresponder ao .button */
+    -fx-padding: 10px 20px;
     -fx-font-size: 13px;
     -fx-pref-width: 130px;
 }
@@ -201,7 +205,7 @@ menu-item {
 }
 
 .list-view {
-    -fx-background-color: #333; /* Fundo mais claro para se destacar */
+    -fx-background-color: #333;
     -fx-border-color: #444;
 }
 

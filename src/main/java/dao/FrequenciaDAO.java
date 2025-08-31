@@ -1,13 +1,22 @@
 package dao;
 
-import database.Conexao;
+// Imports do projeto (gui, modelo, service, dao)
 import modelo.Aluno;
 import modelo.Disciplina;
 import modelo.Frequencia;
+
+//Imports do java
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+//Imports do DAO
+import database.Conexao;
+
+/**
+ *
+ * @author Rhwan
+ */
 
 public class FrequenciaDAO {
     public void salvar(List<Frequencia> registros) {
@@ -72,7 +81,7 @@ public class FrequenciaDAO {
                 "FROM frequencia " +
                 "WHERE aluno_matricula = ? AND disciplina_id = ?";
 
-        int[] resultado = new int[]{0, 0}; // [total_aulas, total_presencas]
+        int[] resultado = new int[]{0, 0};
 
         try (Connection conn = Conexao.getConexao();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

@@ -1,18 +1,7 @@
 package gui;
 
-import gui.aluno.PainelAlunoController;
-import gui.disciplina.PainelDisciplinaController;
-import gui.matricula.PainelMatriculaController;
-import gui.mural.PainelMuralController;
-import gui.notas.PainelNotasController;
-import gui.professor.PainelProfessorController;
-import gui.telainicial.TelaInicialController;
-import gui.turma.PainelTurmaController;
-import gui.visaoaluno.PainelVisaoAlunoController;
-import javafx.animation.Animation;
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+// Imports do JavaFX
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -22,22 +11,40 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.util.Duration;
+
+// Imports do projeto (gui, modelo, service, dao)
+import gui.aluno.PainelAlunoController;
+import gui.disciplina.PainelDisciplinaController;
+import gui.frequencia.PainelFrequenciaController;
+import gui.matricula.PainelMatriculaController;
+import gui.mural.PainelMuralController;
+import gui.notas.PainelNotasController;
+import gui.professor.PainelProfessorController;
+import gui.telainicial.TelaInicialController;
+import gui.turma.PainelTurmaController;
+import gui.visaoaluno.PainelVisaoAlunoController;
 import modelo.*;
 import service.*;
-import javafx.scene.paint.Color;
-import gui.frequencia.PainelFrequenciaController;
-import service.FrequenciaService;
 import dao.*;
+import service.FrequenciaService;
+
+// Imports do Java
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -45,18 +52,22 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author João Ricardo
+ */
+
 public class PrincipalFX extends Application {
 
+    // --- Campos de Estado da UI e Aplicação ---
     private Stage primaryStage;
     private Scene scene;
     private boolean isDarkMode = false;
     private Object usuarioLogado;
+    private String lightTheme;
+    private String darkTheme;
 
-    private final AlunoDAO alunoDAO = new AlunoDAO();
-    private final ProfessorDAO professorDAO = new ProfessorDAO();
-    private final DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
-    private final TurmaDAO turmaDAO = new TurmaDAO();
-
+    // --- Camada de Serviço ---
     private final AlunoService alunoService = new AlunoService();
     private final ProfessorService professorService = new ProfessorService();
     private final DisciplinaService disciplinaService = new DisciplinaService();
@@ -66,14 +77,17 @@ public class PrincipalFX extends Application {
     private final FrequenciaService frequenciaService = new FrequenciaService();
     private final MuralService muralService = new MuralService();
 
+    // --- Camada de Acesso a Dados (DAO) ---
+    private final AlunoDAO alunoDAO = new AlunoDAO();
+    private final ProfessorDAO professorDAO = new ProfessorDAO();
+    private final DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
+    private final TurmaDAO turmaDAO = new TurmaDAO();
+
+    // --- Cache de Dados em Memória ---
     private final List<Disciplina> todasAsDisciplinas = new ArrayList<>();
     private final List<Professor> todosOsProfessores = new ArrayList<>();
     private final List<Aluno> todosOsAlunos = new ArrayList<>();
     private final List<Turma> todasAsTurmas = new ArrayList<>();
-
-    private String lightTheme;
-    private String darkTheme;
-
     public List<Aluno> getTodosOsAlunos() { return todosOsAlunos; }
     public List<Professor> getTodosOsProfessores() { return todosOsProfessores; }
 
@@ -81,10 +95,14 @@ public class PrincipalFX extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Sistema de Gestão Educacional");
+        //"Logo" icone principal.
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagens/icone_principal_24dp_google_material_Symbols.png")));
+
+        // Carrega os caminhos dos temas CSS
         lightTheme = getClass().getResource("/gui/css/styles.css").toExternalForm();
         darkTheme = getClass().getResource("/gui/css/dark-theme.css").toExternalForm();
 
+        // Exibe a tela de carregamento inicial
         VBox loadingLayout = criarLayoutCarregamento("A carregar dados iniciais...");
         scene = new Scene(loadingLayout);
         atualizarTema();
@@ -95,30 +113,36 @@ public class PrincipalFX extends Application {
         carregarDadosEExibirTelaInicial();
     }
 
-    private void carregarDadosEExibirTelaInicial() {
-        Task<Void> task = new Task<>() {
+    // --- Navegação ---
+
+    public void mostrarTelaInicial() {
+        VBox loadingLayout = criarLayoutCarregamento("A regressar ao início...");
+        navegarPara(loadingLayout);
+
+        carregarDadosEExibirTelaInicial();
+    }
+
+    public void abrirJanelaPrincipal(String perfil, Object usuario) {
+        this.usuarioLogado = usuario;
+
+        VBox loadingLayout = criarLayoutCarregamento("A carregar painel...");
+        navegarPara(loadingLayout);
+
+        Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                carregarDadosIniciaisDoBanco();
+                BorderPane layoutPrincipal = criarLayoutPrincipal(perfil);
+                Platform.runLater(() -> navegarPara(layoutPrincipal));
                 return null;
             }
         };
 
-        task.setOnSucceeded(e -> {
-            Parent root = carregarFXML("/gui/telainicial/TelaInicial.fxml");
-            navegarPara(root);
-        });
-
         task.setOnFailed(e -> {
             task.getException().printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Erro de Conexão", "Não foi possível carregar os dados do banco.");
+            showAlert(Alert.AlertType.ERROR, "Erro Crítico", "Falha ao construir a interface principal.");
         });
 
         new Thread(task).start();
-    }
-
-    public boolean isDarkMode() {
-        return isDarkMode;
     }
 
     private void navegarPara(Parent proximoConteudo) {
@@ -139,31 +163,24 @@ public class PrincipalFX extends Application {
         fadeOut.play();
     }
 
-    public void mostrarTelaInicial() {
-        VBox loadingLayout = criarLayoutCarregamento("A regressar ao início...");
-        navegarPara(loadingLayout);
-
-        carregarDadosEExibirTelaInicial();
-    }
-
-    public void abrirJanelaPrincipal(String perfil, Object usuario) {
-        this.usuarioLogado = usuario;
-
-        VBox loadingLayout = criarLayoutCarregamento("A carregar painel...");
-        navegarPara(loadingLayout);
-
-        Task<Void> task = new Task<>() {
+    // --- Carregamento de Dados ---
+    private void carregarDadosEExibirTelaInicial() {
+        Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                BorderPane layoutPrincipal = criarLayoutPrincipal(perfil);
-                Platform.runLater(() -> navegarPara(layoutPrincipal));
+                carregarDadosIniciaisDoBanco();
                 return null;
             }
         };
 
+        task.setOnSucceeded(e -> {
+            Parent root = carregarFXML("/gui/telainicial/TelaInicial.fxml");
+            navegarPara(root);
+        });
+
         task.setOnFailed(e -> {
             task.getException().printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Erro Crítico", "Falha ao construir a interface principal.");
+            showAlert(Alert.AlertType.ERROR, "Erro de Conexão", "Não foi possível carregar os dados do banco.");
         });
 
         new Thread(task).start();
@@ -180,6 +197,8 @@ public class PrincipalFX extends Application {
         todasAsDisciplinas.addAll(disciplinaDAO.listarTodas());
         todasAsTurmas.addAll(turmaDAO.listarTodas());
     }
+
+    // --- Construção da Interface Gráfica (UI) ---
 
     private BorderPane criarLayoutPrincipal(String perfil) throws IOException {
         TabPane tabPane = new TabPane();
@@ -265,9 +284,14 @@ public class PrincipalFX extends Application {
         return header;
     }
 
+    // --- Gestão de Temas ---
     public void toggleTheme() {
         isDarkMode = !isDarkMode;
         atualizarTema();
+    }
+
+    public boolean isDarkMode() {
+        return isDarkMode;
     }
 
     private void atualizarTema() {
@@ -308,7 +332,7 @@ public class PrincipalFX extends Application {
         Parent root = loader.load();
         Object controller = loader.getController();
 
-        // Injeção de dependências...
+        // Injeção de dependências
         if (controller instanceof PainelAlunoController) {
             ((PainelAlunoController) controller).setTodosOsAlunos(todosOsAlunos);
         } else if (controller instanceof PainelProfessorController) {

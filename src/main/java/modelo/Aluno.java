@@ -9,16 +9,18 @@ import javafx.beans.property.SimpleBooleanProperty;
  */
 
 public class Aluno extends Pessoa {
-    private String matricula;//Matricula aluno na istituição
+
+    //Atributos
+    private String matricula;
     private String curso;
     private TipoCurso tipoCurso;
     private int semestre;
-    private NivelAcademico nivelAcademico; //Enum
-    private StatusAluno statusAluno; //Enum
+    private NivelAcademico nivelAcademico;
+    private StatusAluno statusAluno;
     private float nota;
     private float frequencia;
     private float media;
-    private final BooleanProperty presente = new SimpleBooleanProperty();
+    private final BooleanProperty presente = new SimpleBooleanProperty(); //Permite que a interface gráfica (UI) se atualize automaticamente quando o valor de 'presente' muda.
 
     //Construtor
     public Aluno(String nome, String cpf,String RG,Genero genero, String dataNascimento, String telefone, String email, Endereco endereco, String matricula, String curso,TipoCurso tipoCurso, int semestre, NivelAcademico grauDeIntrucao, StatusAluno statusAluno, float nota, float frequencia, float media) {
@@ -33,6 +35,8 @@ public class Aluno extends Pessoa {
         this.frequencia = frequencia;
         this.media = media;
     }
+
+    // Getters e Setters
     public String getMatricula() {
         return matricula;
     }

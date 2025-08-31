@@ -5,11 +5,14 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ *
+ * @author João Ricardo
+ */
 
 public class Buscar<T> extends Dialog<T> {
 
@@ -40,7 +43,7 @@ public class Buscar<T> extends Dialog<T> {
 
         content.getChildren().addAll(new Label("Filtro:"), txtFiltro, listView);
         getDialogPane().setContent(content);
-        getDialogPane().setPrefSize(400, 300); // Define um tamanho padrão
+        getDialogPane().setPrefSize(400, 300);
     }
 
     private void configurarFiltro() {
@@ -53,7 +56,7 @@ public class Buscar<T> extends Dialog<T> {
         listView.getItems().setAll(listaCompleta);
 
         // Define como cada item da lista será exibido
-        listView.setCellFactory(lv -> new ListCell<>() {
+        listView.setCellFactory(lv -> new ListCell<T>() {
             @Override
             protected void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);

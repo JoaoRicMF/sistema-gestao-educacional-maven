@@ -6,6 +6,8 @@ package modelo;
  */
 
 public class Endereco {
+
+    //Atributos
     private String rua;
     private String numero;
     private String complemento;
@@ -14,6 +16,7 @@ public class Endereco {
     private UF uf;
     private String cep;
 
+    //Construtor
     public Endereco(String rua, String numero, String complemento, String bairro, String cidade, UF uf, String cep) {
         this.rua = rua;
         this.numero = numero;
@@ -23,6 +26,8 @@ public class Endereco {
         this.uf = uf;
         this.cep = cep;
     }
+
+    // Getters e Setters
     public String getRua() {
         return rua;
     }

@@ -6,15 +6,18 @@ package modelo;
  */
 
 public abstract class Pessoa {
+
+    //Atributos
     private String nome;
     private String cpf;
     private String RG;
-    private Genero genero; //Enum
+    private Genero genero;
     private String dataNascimento;
     private String telefone;
     private String email;
     private Endereco endereco;
 
+    //Construtor
     public Pessoa(String nome, String cpf, String Rg, Genero genero, String dataNascimento, String telefone, String email, Endereco endereco) {
         this.nome = nome;
         this.cpf = cpf;
@@ -25,6 +28,8 @@ public abstract class Pessoa {
         this.email = email;
         this.endereco = endereco;
     }
+
+    // Getters e Setters
     public String getNome() {
         return nome;
     }

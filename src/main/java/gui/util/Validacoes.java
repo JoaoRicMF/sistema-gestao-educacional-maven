@@ -2,6 +2,10 @@ package gui.util;
 
 import javafx.scene.control.TextField;
 
+/**
+ *
+ * @author João Ricardo
+ */
 public class Validacoes {
     public static void addRequiredFieldValidator(TextField textField) {
         // Remove o estilo de erro assim que o usuário começa a digitar
@@ -11,7 +15,6 @@ public class Validacoes {
             }
         });
 
-        // Adiciona ou remove o estilo de erro QUANDO O FOCO É PERDIDO
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             // Se o campo perdeu o foco (newValue is false)
             if (!newValue) {

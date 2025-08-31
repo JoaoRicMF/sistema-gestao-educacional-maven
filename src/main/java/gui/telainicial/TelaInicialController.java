@@ -11,9 +11,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import modelo.Aluno;
 import modelo.Professor;
-
 import java.util.List;
 import java.util.Optional;
+
+/**
+ *
+ * @author Josemar
+ */
 
 public class TelaInicialController {
     private PrincipalFX mainApp;

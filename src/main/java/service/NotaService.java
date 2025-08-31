@@ -10,10 +10,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author João Ricardo
+ * Camada de serviço para gerenciar as regras relacionadas a Nota.
+ */
+
 public class NotaService {
 
     private final NotaVerificacao notaVerificacao = new NotaVerificacao();
-    private final NotaDAO notaDAO = new NotaDAO(); // Instanciar o DAO
+    private final NotaDAO notaDAO = new NotaDAO();
 
     public double lancarNotasEObterMedia(Aluno aluno, Disciplina disciplina, double valorNota1, double valorNota2) throws ValidacaoExcecoes {
         if (aluno == null || disciplina == null) {

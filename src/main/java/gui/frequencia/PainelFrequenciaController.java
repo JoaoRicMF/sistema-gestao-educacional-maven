@@ -11,6 +11,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ *
+ * @author Josemar
+ */
+
 public class PainelFrequenciaController {
     private FrequenciaService frequenciaService;
     private List<Turma> todasAsTurmas;
@@ -30,7 +35,6 @@ public class PainelFrequenciaController {
     }
     public void setTodasAsDisciplinas(List<Disciplina> todasAsDisciplinas) {
         this.todasAsDisciplinas = todasAsDisciplinas;
-        // Não preenchemos as disciplinas aqui inicialmente
     }
 
     @FXML
@@ -44,14 +48,14 @@ public class PainelFrequenciaController {
     }
 
     private void configurarComboBoxes() {
-        cbTurmas.setCellFactory(lv -> new ListCell<>() {
+        cbTurmas.setCellFactory(lv -> new ListCell<Turma>() {
             @Override
             protected void updateItem(Turma turma, boolean empty) {
                 super.updateItem(turma, empty);
                 setText(empty ? null : turma.getNomeTurma());
             }
         });
-        cbTurmas.setButtonCell(new ListCell<>() {
+        cbTurmas.setButtonCell(new ListCell<Turma>() {
             @Override
             protected void updateItem(Turma turma, boolean empty) {
                 super.updateItem(turma, empty);
@@ -59,14 +63,14 @@ public class PainelFrequenciaController {
             }
         });
 
-        cbDisciplinas.setCellFactory(lv -> new ListCell<>() {
+        cbDisciplinas.setCellFactory(lv -> new ListCell<Disciplina>() {
             @Override
             protected void updateItem(Disciplina disciplina, boolean empty) {
                 super.updateItem(disciplina, empty);
                 setText(empty ? null : disciplina.getNomeDisciplina());
             }
         });
-        cbDisciplinas.setButtonCell(new ListCell<>() {
+        cbDisciplinas.setButtonCell(new ListCell<Disciplina>() {
             @Override
             protected void updateItem(Disciplina disciplina, boolean empty) {
                 super.updateItem(disciplina, empty);

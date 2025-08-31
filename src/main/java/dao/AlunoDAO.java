@@ -1,6 +1,6 @@
 package dao;
 
-import database.Conexao;
+// Imports do projeto (gui, modelo, service, dao)
 import modelo.Aluno;
 import modelo.Endereco;
 import modelo.Genero;
@@ -9,12 +9,21 @@ import modelo.StatusAluno;
 import modelo.TipoCurso;
 import modelo.UF;
 
+//Imports do java
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+//Imports do DAO
+import database.Conexao;
+
+/**
+ *
+ * @author Rhwan
+ */
 
 public class AlunoDAO {
 

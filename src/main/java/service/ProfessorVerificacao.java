@@ -6,6 +6,7 @@ import modelo.Professor;
 /**
  *
  * @author João Ricardo
+ * Camada de verificação para gerenciar as regras relacionadas a Professor.
  */
 
 public class ProfessorVerificacao {

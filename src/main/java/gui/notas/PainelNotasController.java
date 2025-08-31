@@ -11,6 +11,11 @@ import modelo.Disciplina;
 import service.NotaService;
 import java.util.List;
 
+/**
+ *
+ * @author Josemar
+ */
+
 public class PainelNotasController {
 
     private NotaService notaService;
@@ -49,28 +54,28 @@ public class PainelNotasController {
         limparCampos();
     }
     private void configurarComboBoxes(){
-        cbAlunos.setCellFactory(lv -> new ListCell<>() {
+        cbAlunos.setCellFactory(lv -> new ListCell<Aluno>() {
             @Override
             protected void updateItem(Aluno aluno, boolean empty) {
                 super.updateItem(aluno, empty);
                 setText(empty ? null : aluno.getNome());
             }
         });
-        cbAlunos.setButtonCell(new ListCell<>() {
+        cbAlunos.setButtonCell(new ListCell<Aluno>() {
             @Override
             protected void updateItem(Aluno aluno, boolean empty) {
                 super.updateItem(aluno, empty);
                 setText(empty ? null : aluno.getNome());
             }
         });
-        cbDisciplinas.setCellFactory(lv -> new ListCell<>() {
+        cbDisciplinas.setCellFactory(lv -> new ListCell<Disciplina>() {
             @Override
             protected void updateItem(Disciplina disciplina, boolean empty) {
                 super.updateItem(disciplina, empty);
                 setText(empty ? null : disciplina.getNomeDisciplina());
             }
         });
-        cbDisciplinas.setButtonCell(new ListCell<>() {
+        cbDisciplinas.setButtonCell(new ListCell<Disciplina>() {
             @Override
             protected void updateItem(Disciplina disciplina, boolean empty) {
                 super.updateItem(disciplina, empty);

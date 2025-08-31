@@ -8,6 +8,12 @@ import modelo.Turma;
 
 import java.sql.SQLException;
 
+/**
+ *
+ * @author João Ricardo
+ * Camada de serviço para gerenciar as regras relacionadas a Matricula.
+ */
+
 public class MatriculaService {
     private final AlunoVerificacao alunoVerificacao = new AlunoVerificacao();
     private final TurmaDAO turmaDAO = new TurmaDAO();

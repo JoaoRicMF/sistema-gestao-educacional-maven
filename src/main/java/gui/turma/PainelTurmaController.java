@@ -2,21 +2,27 @@ package gui.turma;
 
 import excecoes.ValidacaoExcecoes;
 import gui.util.Validacoes;
+import gui.util.BuscaController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import modelo.*;
 import service.TurmaService;
 import dao.TurmaDAO;
 import java.util.List;
-import gui.util.BuscaController;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import java.io.IOException;
+
+
+/**
+ *
+ * @author Josemar
+ */
 
 public class PainelTurmaController {
 
@@ -62,7 +68,7 @@ public class PainelTurmaController {
 
         configurarComboBoxes();
 
-        listAlunosMatriculados.setCellFactory(lv -> new ListCell<>() {
+        listAlunosMatriculados.setCellFactory(lv -> new ListCell<Aluno>() {
             @Override
             protected void updateItem(Aluno aluno, boolean empty) {
                 super.updateItem(aluno, empty);
@@ -76,14 +82,14 @@ public class PainelTurmaController {
     }
 
     private void configurarComboBoxes() {
-        cbProfessor.setCellFactory(lv -> new ListCell<>() {
+        cbProfessor.setCellFactory(lv -> new ListCell<Professor>() {
             @Override
             protected void updateItem(Professor professor, boolean empty) {
                 super.updateItem(professor, empty);
                 setText(empty ? null : professor.getNome());
             }
         });
-        cbProfessor.setButtonCell(new ListCell<>() {
+        cbProfessor.setButtonCell(new ListCell<Professor>() {
             @Override
             protected void updateItem(Professor professor, boolean empty) {
                 super.updateItem(professor, empty);
@@ -91,14 +97,14 @@ public class PainelTurmaController {
             }
         });
 
-        cbDisciplinasDisponiveis.setCellFactory(lv -> new ListCell<>() {
+        cbDisciplinasDisponiveis.setCellFactory(lv -> new ListCell<Disciplina>() {
             @Override
             protected void updateItem(Disciplina disciplina, boolean empty) {
                 super.updateItem(disciplina, empty);
                 setText(empty ? null : disciplina.getNomeDisciplina());
             }
         });
-        cbDisciplinasDisponiveis.setButtonCell(new ListCell<>() {
+        cbDisciplinasDisponiveis.setButtonCell(new ListCell<Disciplina>() {
             @Override
             protected void updateItem(Disciplina disciplina, boolean empty) {
                 super.updateItem(disciplina, empty);

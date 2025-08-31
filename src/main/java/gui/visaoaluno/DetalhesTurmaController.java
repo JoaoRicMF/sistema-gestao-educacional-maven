@@ -8,6 +8,11 @@ import modelo.Disciplina;
 import modelo.Professor;
 import modelo.Turma;
 
+/**
+ *
+ * @author Josemar
+ */
+
 public class DetalhesTurmaController {
     @FXML private Label lblNomeTurma;
     @FXML private ListView<Disciplina> listDisciplinas;
@@ -30,7 +35,7 @@ public class DetalhesTurmaController {
 
     @FXML
     public void initialize() {
-        listDisciplinas.setCellFactory(lv -> new ListCell<>() {
+        listDisciplinas.setCellFactory(lv -> new ListCell<Disciplina>() {
             @Override
             protected void updateItem(Disciplina item, boolean empty) {
                 super.updateItem(item, empty);
@@ -38,7 +43,7 @@ public class DetalhesTurmaController {
             }
         });
 
-        listProfessores.setCellFactory(lv -> new ListCell<>() {
+        listProfessores.setCellFactory(lv -> new ListCell<Professor>() {
             @Override
             protected void updateItem(Professor item, boolean empty) {
                 super.updateItem(item, empty);

@@ -12,6 +12,7 @@ import java.time.format.DateTimeParseException;
 /**
  *
  * @author João Ricardo
+ * Camada de verificação para gerenciar as regras relacionadas a Pessoa.
  */
 
 public class PessoaVerificacao {

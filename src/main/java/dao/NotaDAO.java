@@ -1,14 +1,23 @@
 package dao;
 
-import database.Conexao;
+// Imports do projeto (gui, modelo, service, dao)
 import modelo.Aluno;
 import modelo.Disciplina;
 import modelo.Nota;
 import modelo.TipoAvaliacao;
+
+//Imports do java
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+//Imports do DAO
+import database.Conexao;
+
+/**
+ *
+ * @author Rhwan
+ */
 
 public class NotaDAO {
 
@@ -70,11 +79,6 @@ public class NotaDAO {
         }
     }
 
-    /**
-     * Busca todas as notas de um aluno específico.
-     * Utiliza um JOIN para trazer também os dados da disciplina em uma única consulta.
-     * return Uma lista de objetos Nota.
-     */
     public List<Nota> listarPorAluno(Aluno aluno) {
         String sql = "SELECT n.*, d.nome_disciplina, d.carga_horaria, d.serie_semestre " +
                 "FROM nota n " +

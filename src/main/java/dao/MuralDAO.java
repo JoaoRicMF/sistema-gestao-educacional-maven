@@ -1,14 +1,23 @@
 package dao;
 
-import database.Conexao;
+// Imports do projeto (gui, modelo, service, dao)
 import modelo.Mural;
 import modelo.Professor;
 import modelo.Turma;
 import modelo.Turno;
+
+//Imports do java
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+//Imports do DAO
+import database.Conexao;
+
+/**
+ *
+ * @author Rhwan
+ */
 
 public class MuralDAO {
 

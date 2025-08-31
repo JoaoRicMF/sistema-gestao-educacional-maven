@@ -7,7 +7,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -53,7 +52,7 @@ public class BuscaController<T> {
     }
 
     private void configurarCelulasListView() {
-        listView.setCellFactory(lv -> new ListCell<>() {
+        listView.setCellFactory(lv -> new ListCell<T>() {
             @Override
             protected void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);

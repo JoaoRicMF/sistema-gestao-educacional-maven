@@ -9,36 +9,33 @@ import java.util.List;
  */
 
 public class Professor extends Pessoa {
+    //Atributos
     private String matricula;
     private List<Disciplina> disciplinas;
 
-
+    //Construtor
     public Professor(String nome, String cpf, String RG, Genero genero, String dataNascimento, String telefone, String email, Endereco endereco, String matricula) {
         super(nome, cpf, RG, genero, dataNascimento, telefone, email, endereco);
         this.matricula = matricula;
         this.disciplinas = new ArrayList<>();
     }
 
+    // Getters e Setters
     public String getMatricula() {
         return matricula;
     }
-
     public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
-
     public void adicionarDisciplina(Disciplina disciplina) {
         this.disciplinas.add(disciplina);
     }
-
     public List<Disciplina> getDisciplinas() {
         return disciplinas;
     }
-
     public void setDisciplinas(List<Disciplina> disciplinas) {
         this.disciplinas = disciplinas;
     }
-
     @Override
     public String toString() {
         return this.getNome();

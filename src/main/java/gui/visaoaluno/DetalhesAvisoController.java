@@ -9,8 +9,9 @@ import java.time.format.DateTimeFormatter;
 
 /**
  *
- * @author João Ricardo
+ * @author Josemar
  */
+
 public class DetalhesAvisoController {
     @FXML private Label lblTitulo;
     @FXML private Label lblSubtitulo;

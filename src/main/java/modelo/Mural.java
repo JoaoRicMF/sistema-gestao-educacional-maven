@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
  */
 
 public class Mural {
+
+    //Atributos
     private int id;
     private String titulo;
     private String conteudo;
@@ -15,6 +17,7 @@ public class Mural {
     private Turma turmaDestino;
     private LocalDateTime dataPostagem;
 
+    //Construtor
     public Mural(String titulo, String conteudo, Professor autor, Turma turmaDestino, LocalDateTime dataPostagem) {
         this.titulo = titulo;
         this.conteudo = conteudo;
@@ -23,7 +26,7 @@ public class Mural {
         this.dataPostagem = dataPostagem;
     }
 
-    // Getters
+    // Getters e Setters
     public int getId() {
         return id;
     }

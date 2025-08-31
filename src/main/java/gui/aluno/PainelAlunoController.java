@@ -3,19 +3,24 @@ package gui.aluno;
 import excecoes.ValidacaoExcecoes;
 import gui.util.Mask;
 import gui.util.Validacoes;
+import gui.util.BuscaController;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
-import modelo.*;
-import service.AlunoService;
-import gui.util.BuscaController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import modelo.*;
+import service.AlunoService;
 import java.io.IOException;
 import java.util.List;
+
+/**
+ *
+ * @author Josemar
+ */
 
 public class PainelAlunoController {
 
@@ -44,7 +49,7 @@ public class PainelAlunoController {
         cbStatusAluno.getItems().setAll(StatusAluno.values());
         cbUF.getItems().setAll(UF.values());
 
-        // máscaras
+        // Máscaras
         Mask.addCPFMask(txtCPF);
         Mask.addRGMask(txtRG);
         Mask.addDateMask(txtDataNascimento);
@@ -151,21 +156,17 @@ public class PainelAlunoController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/util/Busca.fxml"));
             VBox page = loader.load();
 
-            // Cria um novo Stage (janela) para o diálogo
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Buscar Aluno");
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
 
-            // Passa a lista de alunos para o controller da busca
             BuscaController<Aluno> controller = loader.getController();
             controller.setItens(todosOsAlunos, aluno -> aluno.getNome() + " - Matrícula: " + aluno.getMatricula());
 
-            // Mostra o diálogo e espera ele ser fechado
             dialogStage.showAndWait();
 
-            // Pega o resultado
             Aluno alunoSelecionado = controller.getItemSelecionado();
             if (alunoSelecionado != null) {
                 this.alunoCarregado = alunoSelecionado;

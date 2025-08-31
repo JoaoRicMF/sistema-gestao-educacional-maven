@@ -6,6 +6,8 @@ package modelo;
  */
 
 public class BoletimDisciplina {
+
+    //Atributos
     private final Disciplina disciplina;
     private final double nota1;
     private final double nota2;
@@ -15,6 +17,7 @@ public class BoletimDisciplina {
     private final double frequencia;
     private final String status;
 
+    //Construtor
     public BoletimDisciplina(Disciplina disciplina, double nota1, double nota2, double mediaFinal, int totalAulas, int numeroFaltas, String status) {
         this.disciplina = disciplina;
         this.nota1 = nota1;
@@ -26,7 +29,7 @@ public class BoletimDisciplina {
         this.status = status;
     }
 
-    // Getters para todos os campos
+    // Getters e Setters
     public Disciplina getDisciplina() { return disciplina; }
     public double getNota1() { return nota1; }
     public double getNota2() { return nota2; }

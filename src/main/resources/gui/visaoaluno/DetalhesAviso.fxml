@@ -6,6 +6,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<!--@author Josemar-->
+
 <VBox spacing="10.0" styleClass="root" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.visaoaluno.DetalhesAvisoController">
     <children>
         <Label fx:id="lblTitulo" styleClass="titulo-inicial" text="Título do Aviso">

@@ -1,12 +1,22 @@
 package dao;
 
-import database.Conexao;
+// Imports do projeto (gui, modelo, service, dao)
 import modelo.*;
+
+//Imports do java
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+
+//Imports do DAO
+import database.Conexao;
+
+/**
+ *
+ * @author Rhwan
+ */
 
 public class ProfessorDAO {
 

@@ -7,8 +7,9 @@ import modelo.BoletimDisciplina;
 
 /**
  *
- * @author João Ricardo
+ * @author Josemar
  */
+
 public class DetalhesDisciplinaController {
 
         @FXML private Label lblNomeDisciplina;

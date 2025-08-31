@@ -10,9 +10,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author João Ricardo
+ * Camada de serviço para gerenciar as regras relacionadas a Frequencia.
+ */
+
 public class FrequenciaService {
 
-    private final FrequenciaDAO frequenciaDAO = new FrequenciaDAO(); // Instanciar o DAO
+    private final FrequenciaDAO frequenciaDAO = new FrequenciaDAO();
 
     public void lancarFrequencia(Turma turma, Disciplina disciplina, LocalDate data, List<Aluno> alunosPresentes) throws ValidacaoExcecoes {
         if (turma == null || disciplina == null || data == null || alunosPresentes == null) {

@@ -10,6 +10,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<!--@author Josemar-->
+
 <BorderPane styleClass="tela-inicial-container, root" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.telainicial.TelaInicialController">
     <top>
         <HBox alignment="CENTER_RIGHT">

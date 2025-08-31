@@ -6,6 +6,12 @@ import modelo.Professor;
 import modelo.Turma;
 import modelo.Turno;
 
+/**
+ *
+ * @author João Ricardo
+ * Camada de serviço para gerenciar as regras relacionadas a Turma.
+ */
+
 public class TurmaService {
 
     private final TurmaVerificacao turmaVerificacao = new TurmaVerificacao();

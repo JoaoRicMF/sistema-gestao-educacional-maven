@@ -8,6 +8,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<!--@author Josemar-->
+
 <VBox spacing="15.0" styleClass="root" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.visaoaluno.DetalhesDisciplinaController">
     <children>
         <Label fx:id="lblNomeDisciplina" styleClass="titulo-inicial" text="Detalhes da Disciplina">

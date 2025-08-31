@@ -6,14 +6,17 @@ import java.time.LocalDate;
  *
  * @author João Ricardo
  */
+
 public class Frequencia {
 
+    //Atributos
     private int id;
     private Aluno aluno;
     private Disciplina disciplina;
     private LocalDate data;
     private boolean presente;
 
+    //Construtor
     public Frequencia(Aluno aluno, Disciplina disciplina, LocalDate data, boolean presente) {
         this.aluno = aluno;
         this.disciplina = disciplina;

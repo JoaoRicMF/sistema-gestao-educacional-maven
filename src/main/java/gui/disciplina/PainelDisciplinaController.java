@@ -2,21 +2,26 @@ package gui.disciplina;
 
 import excecoes.ValidacaoExcecoes;
 import gui.util.Validacoes;
+import gui.util.BuscaController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
-import modelo.Disciplina;
-import service.DisciplinaService;
-import java.util.List;
-import java.util.Optional;
-import gui.util.BuscaController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import modelo.Disciplina;
+import service.DisciplinaService;
+import java.util.List;
+import java.util.Optional;
 import java.io.IOException;
+
+/**
+ *
+ * @author Josemar
+ */
 
 public class PainelDisciplinaController {
     @FXML private TextField txtNomeDisciplina;

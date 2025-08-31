@@ -5,6 +5,12 @@ import excecoes.ValidacaoExcecoes;
 import modelo.Disciplina;
 import java.util.Optional;
 
+/**
+ *
+ * @author João Ricardo
+ * Camada de serviço para gerenciar as regras relacionadas a Disciplina.
+ */
+
 public class DisciplinaService {
     private final DisciplinaVerificacao disciplinaVerificacao = new DisciplinaVerificacao();
     private final DisciplinaDAO disciplinaDAO = new DisciplinaDAO();

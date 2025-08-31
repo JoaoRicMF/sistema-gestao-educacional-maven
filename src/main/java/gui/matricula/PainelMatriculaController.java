@@ -10,12 +10,15 @@ import javafx.scene.control.TextField;
 import modelo.Aluno;
 import modelo.Turma;
 import service.MatriculaService;
-
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+
+/**
+ *
+ * @author Josemar
+ */
 
 public class PainelMatriculaController {
 
@@ -53,28 +56,28 @@ public class PainelMatriculaController {
     }
 
     private void configurarComboBoxes() {
-        cbAlunos.setCellFactory(lv -> new ListCell<>() {
+        cbAlunos.setCellFactory(lv -> new ListCell<Aluno>() {
             @Override
             protected void updateItem(Aluno aluno, boolean empty) {
                 super.updateItem(aluno, empty);
                 setText(empty ? null : aluno.getNome());
             }
         });
-        cbAlunos.setButtonCell(new ListCell<>() {
+        cbAlunos.setButtonCell(new ListCell<Aluno>() {
             @Override
             protected void updateItem(Aluno aluno, boolean empty) {
                 super.updateItem(aluno, empty);
                 setText(empty ? null : aluno.getNome());
             }
         });
-        cbTurmas.setCellFactory(lv -> new ListCell<>() {
+        cbTurmas.setCellFactory(lv -> new ListCell<Turma>() {
             @Override
             protected void updateItem(Turma turma, boolean empty) {
                 super.updateItem(turma, empty);
                 setText(empty ? null : turma.getNomeTurma());
             }
         });
-        cbTurmas.setButtonCell(new ListCell<>() {
+        cbTurmas.setButtonCell(new ListCell<Turma>() {
             @Override
             protected void updateItem(Turma turma, boolean empty) {
                 super.updateItem(turma, empty);

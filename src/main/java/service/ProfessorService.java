@@ -6,13 +6,18 @@ import modelo.Professor;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ *
+ * @author João Ricardo
+ * Camada de serviço para gerenciar as regras relacionadas a Professor.
+ */
+
 public class ProfessorService {
 
     private final ProfessorVerificacao professorVerificacao = new ProfessorVerificacao();
     private final ProfessorDAO professorDAO = new ProfessorDAO();
 
     public Optional<Professor> buscarProfessorPorMatricula(String matricula) {
-        // Implementar a busca por matrícula no DAO se necessário
         return professorDAO.listarTodos().stream()
                 .filter(p -> p.getMatricula().equals(matricula))
                 .findFirst();

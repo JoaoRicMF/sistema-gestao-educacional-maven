@@ -6,6 +6,7 @@ import modelo.Nota;
 /**
  *
  * @author João Ricardo
+ * Camada de verificação para gerenciar as regras relacionadas a nota.
  */
 
 public class NotaVerificacao {

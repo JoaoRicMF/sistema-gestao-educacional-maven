@@ -2,8 +2,12 @@ package main;
 
 import database.TesteConexao;
 import gui.PrincipalFX;
-
 import java.sql.SQLException;
+
+/**
+ *
+ * @author João Ricardo
+ */
 
 public class Main {
 

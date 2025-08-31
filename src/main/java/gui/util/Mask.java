@@ -3,6 +3,11 @@ package gui.util;
 import javafx.application.Platform;
 import javafx.scene.control.TextField;
 
+/**
+ *
+ * @author João Ricardo
+ */
+
 public class Mask {
 
     public static void addCPFMask(TextField textField) {

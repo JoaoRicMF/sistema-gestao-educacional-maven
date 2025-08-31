@@ -8,13 +8,15 @@ import java.time.LocalDate;
  */
 
 public class Nota {
+    //Atributos
     private int id;
     private Aluno aluno;
     private Disciplina disciplina;
     private double valor;
-    private TipoAvaliacao tipoAvaliacao; //enum
+    private TipoAvaliacao tipoAvaliacao;
     private LocalDate data; // data da Prova
 
+    //Construtor
     public Nota(Aluno aluno, Disciplina disciplina, double valor, TipoAvaliacao tipoAvaliacao, LocalDate data) {
         this.aluno = aluno;
         this.disciplina = disciplina;
@@ -23,6 +25,7 @@ public class Nota {
         this.data = data;
     }
 
+    // Getters e Setters
     public int getId() {
         return id;
     }

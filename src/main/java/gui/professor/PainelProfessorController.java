@@ -14,9 +14,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import modelo.*;
 import service.ProfessorService;
-import java.util.List;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+
+/**
+ *
+ * @author Josemar
+ */
 
 public class PainelProfessorController {
 

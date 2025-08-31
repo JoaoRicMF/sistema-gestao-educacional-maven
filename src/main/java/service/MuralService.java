@@ -9,6 +9,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author João Ricardo
+ * Camada de serviço para gerenciar as regras relacionadas a Mural.
+ */
+
 public class MuralService {
 
     private final MuralDAO muralDAO = new MuralDAO();

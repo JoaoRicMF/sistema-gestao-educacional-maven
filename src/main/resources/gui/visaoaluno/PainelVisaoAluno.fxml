@@ -11,6 +11,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<!--@author Josemar-->
+
 <ScrollPane fitToWidth="true" styleClass="root" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.visaoaluno.PainelVisaoAlunoController">
     <content>
         <VBox spacing="20.0">

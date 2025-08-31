@@ -4,6 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ *
+ * @author Rhwan
+ */
+
 public class Conexao {
 
     private static final String HOST = "db.xxvuzcrbsnzdhogyihkm.supabase.co";

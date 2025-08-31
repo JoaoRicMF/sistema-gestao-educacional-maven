@@ -8,6 +8,11 @@ import modelo.Turma;
 import service.MuralService;
 import java.util.List;
 
+/**
+ *
+ * @author Josemar
+ */
+
 public class PainelMuralController {
     private MuralService muralService;
     private List<Turma> todasAsTurmas;
@@ -33,14 +38,14 @@ public class PainelMuralController {
 
     @FXML
     public void initialize() {
-        cbTurmas.setCellFactory(lv -> new ListCell<>() {
+        cbTurmas.setCellFactory(lv -> new ListCell<Turma>() {
             @Override
             protected void updateItem(Turma turma, boolean empty) {
                 super.updateItem(turma, empty);
                 setText(empty ? null : turma.getNomeTurma());
             }
         });
-        cbTurmas.setButtonCell(new ListCell<>() {
+        cbTurmas.setButtonCell(new ListCell<Turma>() {
             @Override
             protected void updateItem(Turma turma, boolean empty) {
                 super.updateItem(turma, empty);

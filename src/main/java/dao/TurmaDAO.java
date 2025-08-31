@@ -1,8 +1,9 @@
 package dao;
 
-import database.Conexao;
+// Imports do projeto (gui, modelo, service, dao)
 import modelo.*;
 
+//Imports do java
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +14,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+//Imports do DAO
+import database.Conexao;
+
+/**
+ *
+ * @author Rhwan
+ */
 
 public class TurmaDAO {
     public void salvar(Turma turma) {
@@ -101,7 +110,7 @@ public class TurmaDAO {
         return new Aluno(
                 rs.getString("nome"), rs.getString("cpf"), rs.getString("rg"),
                 Genero.valueOf(rs.getString("genero")), rs.getString("data_nascimento"),
-                rs.getString("telefone"), rs.getString("email"), null, // Endereço simplificado para esta consulta
+                rs.getString("telefone"), rs.getString("email"), null,
                 rs.getString("matricula"), rs.getString("curso"),
                 TipoCurso.valueOf(rs.getString("tipo_curso")), rs.getInt("semestre"),
                 NivelAcademico.valueOf(rs.getString("nivel_academico")),

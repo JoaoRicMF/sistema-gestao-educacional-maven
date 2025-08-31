@@ -14,7 +14,6 @@ import modelo.*;
 import service.FrequenciaService;
 import service.MuralService;
 import service.NotaService;
-
 import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+/**
+ *
+ * @author Josemar
+ */
 
 public class PainelVisaoAlunoController {
 
@@ -141,9 +145,8 @@ public class PainelVisaoAlunoController {
         }
     }
 
-    // O resto da classe permanece igual (configurarListViews, abrirDetalhes, etc.)
     private void configurarListViews() {
-        listMural.setCellFactory(lv -> new ListCell<>() {
+        listMural.setCellFactory(lv -> new ListCell<Mural>() {
             @Override
             protected void updateItem(Mural item, boolean empty) {
                 super.updateItem(item, empty);
@@ -160,14 +163,14 @@ public class PainelVisaoAlunoController {
                 }
             }
         });
-        listTurmas.setCellFactory(lv -> new ListCell<>() {
+        listTurmas.setCellFactory(lv -> new ListCell<Turma>() {
             @Override
             protected void updateItem(Turma turma, boolean empty) {
                 super.updateItem(turma, empty);
                 setText(empty ? null : turma.getNomeTurma() + " - " + turma.getSemestre() + "º Semestre - " + turma.getTurno());
             }
         });
-        listNotas.setCellFactory(lv -> new ListCell<>() {
+        listNotas.setCellFactory(lv -> new ListCell<BoletimDisciplina>() {
             @Override
             protected void updateItem(BoletimDisciplina item, boolean empty) {
                 super.updateItem(item, empty);
@@ -175,7 +178,6 @@ public class PainelVisaoAlunoController {
             }
         });
     }
-
     private void abrirDetalhesTurma(Turma turma) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/visaoaluno/DetalhesTurma.fxml"));

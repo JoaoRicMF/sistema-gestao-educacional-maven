@@ -7,6 +7,7 @@ import modelo.UF;
 /**
  *
  * @author João Ricardo
+ * Camada de verificação para gerenciar as regras relacionadas a Endereço.
  */
 
 public class EnderecoVerificacao {

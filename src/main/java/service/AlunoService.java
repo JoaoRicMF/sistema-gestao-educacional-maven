@@ -7,6 +7,11 @@ import modelo.Endereco;
 import modelo.StatusAluno;
 import java.util.Optional;
 
+/**
+ *
+ * @author João Ricardo
+ * Camada de serviço para gerenciar as regras relacionadas a Alunos.
+ */
 public class AlunoService {
 
     private final AlunoVerificacao alunoVerificacao = new AlunoVerificacao();
@@ -23,7 +28,6 @@ public class AlunoService {
             if (alunoDAO.buscarPorCpf(aluno.getCpf()) != null) {
                 throw new ValidacaoExcecoes("O CPF informado já está cadastrado no sistema.");
             }
-            // ---------------------
 
             alunoDAO.salvar(aluno);
             System.out.println("LOG: Aluno '" + aluno.getNome() + "' cadastrado com sucesso!");

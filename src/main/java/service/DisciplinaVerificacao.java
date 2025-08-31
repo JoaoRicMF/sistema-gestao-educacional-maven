@@ -6,6 +6,7 @@ import modelo.Disciplina;
 /**
  *
  * @author João Ricardo
+ * Camada de verificação para gerenciar as regras relacionadas a Disciplina.
  */
 
 public class DisciplinaVerificacao {

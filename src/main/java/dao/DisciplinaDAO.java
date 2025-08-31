@@ -1,13 +1,19 @@
 package dao;
 
-import database.Conexao;
+// Imports do projeto (gui, modelo, service, dao)
 import modelo.Disciplina;
+
+//Imports do java
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+//Imports do DAO
+import database.Conexao;
+
 /**
  *
- * @author João Ricardo
+ * @author Rhwan
  */
 public class DisciplinaDAO {
     public void salvar(Disciplina disciplina) {
@@ -19,7 +25,7 @@ public class DisciplinaDAO {
             pstmt.setInt(3, disciplina.getSerieSemestre());
             pstmt.executeUpdate();
 
-            // Pega o ID gerado pelo banco e atribui ao objeto (opcional, mas boa prática)
+            // Pega o ID gerado pelo banco e atribui ao objeto
             ResultSet generatedKeys = pstmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 disciplina.setId(generatedKeys.getInt(1));

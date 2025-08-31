@@ -10,19 +10,22 @@ import java.util.Objects;
  */
 
 public class Disciplina {
+    //Atributos
     private int id;
     private String nomeDisciplina;
     private int cargaHoraria;
-    private int serieSemestre; // Adicionado
+    private int serieSemestre;
     private List<Disciplina> preRequisitos;
 
-    public Disciplina(String nomeDisciplina, int cargaHoraria, int serieSemestre) { // Adicionado
+    //Construtor
+    public Disciplina(String nomeDisciplina, int cargaHoraria, int serieSemestre) {
         this.nomeDisciplina = nomeDisciplina;
         this.cargaHoraria = cargaHoraria;
-        this.serieSemestre = serieSemestre; // Adicionado
+        this.serieSemestre = serieSemestre;
         this.preRequisitos = new ArrayList<>();
     }
 
+    // Getters e Setters
     public int getId() {
         return id;
     }
@@ -65,7 +68,6 @@ public class Disciplina {
         Disciplina that = (Disciplina) o;
         return id == that.id;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(id);

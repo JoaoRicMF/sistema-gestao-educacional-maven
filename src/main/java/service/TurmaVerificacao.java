@@ -6,6 +6,7 @@ import modelo.Turma;
 /**
  *
  * @author João Ricardo
+ * Camada de verificação para gerenciar as regras relacionadas a Turma.
  */
 
 public class TurmaVerificacao {
@@ -14,12 +15,10 @@ public class TurmaVerificacao {
             throw new ValidacaoExcecoes("Erro: O objeto Turma não pode ser nulo.");
         }
 
-        // O nome da turma é obrigatório
         if (turma.getNomeTurma() == null || turma.getNomeTurma().trim().isEmpty()) {
             throw new ValidacaoExcecoes("Erro: O nome da turma é obrigatório.");
         }
 
-        // O semestre deve ser um número positivo
         if (turma.getSemestre() <= 0) {
             throw new ValidacaoExcecoes("Erro: O semestre da turma deve ser um valor positivo.");
         }
